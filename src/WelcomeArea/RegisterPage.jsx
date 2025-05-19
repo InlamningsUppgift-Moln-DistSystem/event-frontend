@@ -1,27 +1,18 @@
 import { useNavigate } from "react-router-dom";
 import "./RegisterPage.css";
-import { useEffect } from "react";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 
 function RegisterPage() {
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleRegister = (e) => {
     e.preventDefault();
     localStorage.setItem("token", "mock-token");
     navigate("/app");
   };
-
-  useEffect(() => {
-    document.querySelectorAll(".toggle-password").forEach((button) => {
-      button.addEventListener("click", function () {
-        const targetId = this.getAttribute("data-target");
-        const input = document.getElementById(targetId);
-        const isHidden = input.type === "password";
-        input.type = isHidden ? "text" : "password";
-        this.textContent = isHidden ? "🔒" : "👁️";
-      });
-    });
-  }, []);
 
   return (
     <main className="login-page">
@@ -80,15 +71,14 @@ function RegisterPage() {
                   </label>
                   <div style={{ position: "relative" }}>
                     <input
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       id="signup-password"
                       className="form-input"
                       placeholder="Enter your password"
                     />
                     <button
                       type="button"
-                      className="toggle-password"
-                      data-target="signup-password"
+                      onClick={() => setShowPassword(!showPassword)}
                       style={{
                         position: "absolute",
                         right: 10,
@@ -96,9 +86,10 @@ function RegisterPage() {
                         transform: "translateY(-50%)",
                         background: "none",
                         border: "none",
+                        cursor: "pointer",
                       }}
                     >
-                      👁️
+                      {showPassword ? "🔒" : "👁️"}
                     </button>
                   </div>
                 </div>
@@ -109,15 +100,16 @@ function RegisterPage() {
                   </label>
                   <div style={{ position: "relative" }}>
                     <input
-                      type="password"
+                      type={showConfirmPassword ? "text" : "password"}
                       id="confirm-password"
                       className="form-input"
                       placeholder="Confirm your password"
                     />
                     <button
                       type="button"
-                      className="toggle-password"
-                      data-target="confirm-password"
+                      onClick={() =>
+                        setShowConfirmPassword(!showConfirmPassword)
+                      }
                       style={{
                         position: "absolute",
                         right: 10,
@@ -125,9 +117,10 @@ function RegisterPage() {
                         transform: "translateY(-50%)",
                         background: "none",
                         border: "none",
+                        cursor: "pointer",
                       }}
                     >
-                      👁️
+                      {showConfirmPassword ? "🔒" : "👁️"}
                     </button>
                   </div>
                 </div>
@@ -162,9 +155,9 @@ function RegisterPage() {
 
                 <p className="login-text">
                   Already have an account?{" "}
-                  <a href="/" className="toggle-to-login">
+                  <Link to="/" className="toggle-to-login">
                     Login
-                  </a>
+                  </Link>
                 </p>
               </form>
             </div>

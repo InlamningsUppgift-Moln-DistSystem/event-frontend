@@ -1,10 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import "./LoginPage.css";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 
 function LoginPage() {
+  //Variables
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
 
+  //functions
   const handleLogin = (e) => {
     e.preventDefault();
     localStorage.setItem("token", "mock-token");
@@ -58,17 +62,17 @@ function LoginPage() {
                   </label>
                   <div style={{ position: "relative" }}>
                     <input
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       id="login-password"
                       name="Password"
                       className="form-input light-bg"
                       placeholder="Enter your password"
                       autoComplete="current-password"
                     />
+
                     <button
                       type="button"
-                      className="toggle-password"
-                      data-target="login-password"
+                      onClick={() => setShowPassword(!showPassword)}
                       style={{
                         position: "absolute",
                         right: 10,
@@ -80,7 +84,7 @@ function LoginPage() {
                         zIndex: 10,
                       }}
                     >
-                      👁️
+                      {showPassword ? "🔒" : "👁️"}
                     </button>
                   </div>
                 </div>

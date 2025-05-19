@@ -1,3 +1,4 @@
+/* ---------- Desktop (default) ---------- */
 .sidebar {
   width: 223px;
   border-radius: 16px;
@@ -71,33 +72,6 @@
   gap: 16px;
 }
 
-.upgrade-prompt {
-  border-radius: 12px;
-  padding: 24px 16px 16px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 18px;
-  background-color: #fff;
-}
-
-.upgrade-text {
-  color: #37437d;
-  font-size: 12px;
-  text-align: center;
-}
-
-.upgrade-button {
-  color: #fff;
-  border: none;
-  border-radius: 36px;
-  padding: 8px 14px;
-  font-size: 12px;
-  width: 100%;
-  cursor: pointer;
-  background-color: #f26cf9;
-}
-
 .signout-button {
   color: #37437d;
   border: none;
@@ -106,4 +80,103 @@
   font-size: 14px;
   cursor: pointer;
   background-color: #e4e5f5;
+}
+
+.signout-icon-button {
+  display: none;
+}
+
+.hamburger-button {
+  display: none;
+}
+/* ---------- Tablet (max-width: 1024px) ---------- */
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 72px;
+    padding: 16px 0;
+    align-items: center;
+  }
+
+  .brand-name,
+  .nav-item span {
+    display: none;
+  }
+
+  .brand {
+    justify-content: center;
+    padding: 0;
+  }
+
+  .nav-item {
+    justify-content: center;
+    padding: 10px 0;
+  }
+
+  .signout-button {
+    display: none;
+  }
+
+  .signout-icon-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12px;
+    border: none;
+    border-radius: 50%;
+    background-color: #e4e5f5;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    margin: 0 auto;
+  }
+
+  .sidebar-footer {
+    display: flex;
+    padding: 16px 0;
+  }
+}
+
+/* ---------- Mobil (max-width: 767px) ---------- */
+@media (max-width: 767px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    width: 100%;
+    background-color: #eeefff;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 16px;
+    z-index: 1000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+
+  .main-nav,
+  .sidebar-footer,
+  .nav-item {
+    display: none;
+  }
+
+  .brand {
+    justify-content: flex-start;
+    margin-bottom: 0;
+  }
+
+  .hamburger-button {
+    display: flex;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+  }
+
+  .hamburger-icon {
+    width: 24px;
+    height: 24px;
+    stroke: #1c2346;
+  }
 }

@@ -19,7 +19,22 @@ function Sidebar() {
         />
         <h1 className="brand-name">Ventixe</h1>
       </div>
-
+      {/* Endast synlig i mobil – hamburger button */}
+      <button className="hamburger-button">
+        <svg
+          className="hamburger-icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <line x1="3" y1="12" x2="21" y2="12" />
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <line x1="3" y1="18" x2="21" y2="18" />
+        </svg>
+      </button>
       <nav className="main-nav">
         <a href="#" className="nav-item active">
           <svg
@@ -72,8 +87,25 @@ function Sidebar() {
       </nav>
 
       <div className="sidebar-footer">
+        {/* Desktop-knapp */}
         <button className="signout-button" onClick={handleSignOut}>
           Sign Out
+        </button>
+
+        {/* Tablet-ikonknapp */}
+        <button className="signout-icon-button" onClick={handleSignOut}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path
+              fill="#37437D"
+              d="M16 13v-2H8V9l-4 3 4 3v-2h8zM20 3H4c-1.1 0-2 .9-2 2v4h2V5h16v14H4v-4H2v4c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+            />
+          </svg>
         </button>
       </div>
     </aside>

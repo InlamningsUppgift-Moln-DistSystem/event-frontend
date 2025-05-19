@@ -30,3 +30,12 @@ body {
   justify-content: space-between;
   width: 100%;
 }
+@media (max-width: 767px) {
+  .dashboard-layout {
+    flex-direction: column;
+  }
+
+  .dashboard-header {
+    display: none !important;
+  }
+}

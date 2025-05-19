@@ -1,0 +1,95 @@
+/* ==========================================================================
+   REGISTER PAGE STYLING
+   ==========================================================================
+   Denna fil innehåller specifika stilar för RegisterPage.jsx.
+   Observera att majoriteten av det visuella gränssnittet (layout, inputs, knappar)
+   delar samma klassnamn och struktur som LoginPage.jsx och hämtar sin basstil
+   från LoginPage.css. Undvik duplicering – justera i LoginPage.css om ändringar
+   påverkar båda sidor.
+   ==========================================================================
+*/
+
+/* Light form styling (same as login) */
+.form-input {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid #ebeef2;
+  font-size: 15px;
+  color: #1a1926;
+  font-family: "Nunito", sans-serif;
+  background-color: #f5f7fa;
+}
+
+.form-input::placeholder {
+  color: #9aa5b1;
+}
+
+.form-label {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 9px;
+  color: #1a1926;
+  font-family: "Nunito", sans-serif;
+}
+
+.form-group {
+  margin-bottom: 24px;
+}
+
+.form-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 32px;
+  font-size: 14px;
+}
+
+.terms-link {
+  color: #2d99ff;
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+/* Submit button */
+.login-button {
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  border: none;
+  background-color: #2d99ff;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  box-shadow: 0 4px 16px rgba(0, 129, 255, 0.18);
+  cursor: pointer;
+  font-family: "Nunito", sans-serif;
+}
+
+/* Bottom prompt */
+.login-text {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 15px;
+  color: #37437d;
+}
+
+.login-text a {
+  color: #2d99ff;
+  font-weight: 600;
+  text-decoration: underline;
+}
+.remember-me {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #1a1926;
+}
+
+.remember-me input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #2d99ff; /* modern browsers */
+}

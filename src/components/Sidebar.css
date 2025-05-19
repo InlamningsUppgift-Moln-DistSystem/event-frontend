@@ -1,0 +1,109 @@
+.sidebar {
+  width: 223px;
+  border-radius: 16px;
+  padding: 24px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  background-color: #eeefff;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 32px;
+  margin-bottom: 32px;
+}
+
+.brand-logo {
+  width: 24px;
+  height: 24px;
+}
+
+.brand-name {
+  color: #1c2346;
+  font-size: 24px;
+  font-weight: 400;
+}
+
+.main-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 32px;
+  color: #37437d;
+  font-size: 14px;
+  text-decoration: none;
+  position: relative;
+  cursor: pointer;
+}
+
+.nav-item.active {
+  color: #f26cf9;
+}
+
+.active-indicator {
+  position: absolute;
+  right: 0;
+  width: 4px;
+  height: 30px;
+  border-radius: 0 12px 12px 0;
+  background-color: #f589fa;
+  display: none;
+}
+
+.nav-item.active .active-indicator {
+  display: block;
+}
+
+.sidebar-footer {
+  padding: 0 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.upgrade-prompt {
+  border-radius: 12px;
+  padding: 24px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  background-color: #fff;
+}
+
+.upgrade-text {
+  color: #37437d;
+  font-size: 12px;
+  text-align: center;
+}
+
+.upgrade-button {
+  color: #fff;
+  border: none;
+  border-radius: 36px;
+  padding: 8px 14px;
+  font-size: 12px;
+  width: 100%;
+  cursor: pointer;
+  background-color: #f26cf9;
+}
+
+.signout-button {
+  color: #37437d;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 32px;
+  font-size: 14px;
+  cursor: pointer;
+  background-color: #e4e5f5;
+}

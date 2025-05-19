@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import "./LoginPage.css";
+import { Link } from "react-router-dom";
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -90,9 +91,9 @@ function LoginPage() {
 
                 <p className="signup-prompt">
                   Don’t have an account?{" "}
-                  <a href="/register" className="toggle-to-signup">
+                  <Link to="/register" className="toggle-to-signup">
                     Sign up
-                  </a>
+                  </Link>
                 </p>
               </form>
             </div>

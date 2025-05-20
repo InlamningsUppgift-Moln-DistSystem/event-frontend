@@ -1,8 +1,13 @@
 // App.jsx
 import "./App.css";
-import Sidebar from "../components/Sidebar";
-import Topbar from "../components/Topbar";
-import Footer from "../components/Footer";
+import Sidebar from "./MainAppComponents/Sidebar";
+import Topbar from "./MainAppComponents/Topbar";
+import Footer from "./MainAppComponents/Footer";
+import TimelinePage from "./Pages/TimelinePage/TimelinePage";
+import EventsPage from "./Pages/EventsPage/EventsPage";
+import AttendingPage from "./Pages/AttendingPage/AttendingPage";
+import FollowingPage from "./Pages/FollowingPage/FollowingPage";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 function App() {
   return (
@@ -10,8 +15,13 @@ function App() {
       <Sidebar />
       <main className="main-content">
         <Topbar />
-        {/* Här kan du lägga annan innehåll */}
-        {/* Här skulle du kunna lägga routes eller dashboard-sektioner */}
+        <Routes>
+          <Route index element={<Navigate to="timeline" replace />} />
+          <Route path="timeline" element={<TimelinePage />} />
+          <Route path="events" element={<EventsPage />} />
+          <Route path="attending" element={<AttendingPage />} />
+          <Route path="following" element={<FollowingPage />} />
+        </Routes>
         <Footer />
       </main>
     </div>

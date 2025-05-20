@@ -28,7 +28,7 @@ function LoginPage() {
 
       <section className="welcome-section">
         <h1 className="welcome-title">
-          Welcome to <span className="highlight">Alpha</span>
+          Welcome to <span className="highlight">Ventixe</span>
         </h1>
         <p className="welcome-description">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus

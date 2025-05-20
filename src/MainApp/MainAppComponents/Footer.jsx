@@ -7,13 +7,28 @@ function Footer() {
         <div className="footer-info">
           <p className="copyright">© 2025 Peterdraw</p>
           <nav className="footer-links">
-            <a href="#" className="footer-link">
+            <a
+              href="/privacy"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="footer-link"
+            >
               Privacy Policy
             </a>
-            <a href="#" className="footer-link">
-              Term and conditions
+            <a
+              href="/terms"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="footer-link"
+            >
+              Terms and Conditions
             </a>
-            <a href="#" className="footer-link">
+            <a
+              href="/contact"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="footer-link"
+            >
               Contact
             </a>
           </nav>

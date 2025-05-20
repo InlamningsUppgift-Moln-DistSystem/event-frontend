@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 function RegisterPage() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleRegister = (e) => {
     e.preventDefault();
@@ -27,7 +26,7 @@ function RegisterPage() {
 
       <section className="welcome-section">
         <h1 className="welcome-title">
-          Welcome to <span className="highlight">Alpha</span>
+          Register to <span className="highlight">Ventixe</span>
         </h1>
         <p className="welcome-description">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus
@@ -92,49 +91,6 @@ function RegisterPage() {
                       {showPassword ? "🔒" : "👁️"}
                     </button>
                   </div>
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="confirm-password" className="form-label">
-                    Confirm Password
-                  </label>
-                  <div style={{ position: "relative" }}>
-                    <input
-                      type={showConfirmPassword ? "text" : "password"}
-                      id="confirm-password"
-                      className="form-input"
-                      placeholder="Confirm your password"
-                    />
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setShowConfirmPassword(!showConfirmPassword)
-                      }
-                      style={{
-                        position: "absolute",
-                        right: 10,
-                        top: "50%",
-                        transform: "translateY(-50%)",
-                        background: "none",
-                        border: "none",
-                        cursor: "pointer",
-                      }}
-                    >
-                      {showConfirmPassword ? "🔒" : "👁️"}
-                    </button>
-                  </div>
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="phone-number" className="form-label">
-                    Phone Number
-                  </label>
-                  <input
-                    type="tel"
-                    id="phone-number"
-                    className="form-input"
-                    placeholder="Your phone number"
-                  />
                 </div>
 
                 <div className="form-actions">

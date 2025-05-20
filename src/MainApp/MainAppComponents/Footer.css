@@ -5,6 +5,7 @@
   border-radius: 16px;
   padding: 16px 24px;
   background-color: #f7f7f7;
+  user-select: none;
 }
 
 .footer-content {

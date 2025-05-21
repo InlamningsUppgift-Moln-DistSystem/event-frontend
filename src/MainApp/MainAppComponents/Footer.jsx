@@ -5,7 +5,7 @@ function Footer() {
     <footer className="dashboard-footer">
       <div className="footer-content">
         <div className="footer-info">
-          <p className="copyright">© 2025 Peterdraw</p>
+          <p className="copyright">© 2025 Ventixe</p>
           <nav className="footer-links">
             <a
               href="/privacy"

@@ -116,6 +116,32 @@ function RegisterPage() {
                   </Link>
                 </p>
               </form>
+              <nav className="auth-footer-links">
+                <a
+                  href="/privacy"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="auth-footer-link"
+                >
+                  Privacy Policy
+                </a>
+                <a
+                  href="/terms"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="auth-footer-link"
+                >
+                  Terms
+                </a>
+                <a
+                  href="/contact"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="auth-footer-link"
+                >
+                  Contact
+                </a>
+              </nav>
             </div>
           </div>
         </div>

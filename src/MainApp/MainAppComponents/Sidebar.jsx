@@ -1,16 +1,20 @@
-// Sidebar.jsx (lägg i src/components)
 import "./Sidebar.css";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useState } from "react";
 
 function Sidebar() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const isActive = (path) => pathname.includes(path);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [notificationOpen, setNotificationOpen] = useState(false);
+
+  const isActive = (path) => pathname.startsWith(`/app/${path}`);
 
   const handleSignOut = () => {
-    localStorage.removeItem("token"); // Rensa auth
-    navigate("/"); // Tillbaka till login
+    localStorage.removeItem("token");
+    navigate("/");
   };
+
   return (
     <aside className="sidebar">
       <div className="brand">
@@ -21,24 +25,53 @@ function Sidebar() {
         />
         <h1 className="brand-name">Ventixe</h1>
       </div>
-      {/* Endast synlig i mobil – hamburger button */}
-      <button className="hamburger-button">
-        <svg
-          className="hamburger-icon"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
+
+      {/* Mobil: notifikation & hamburgare */}
+      <div className="mobile-actions">
+        <button
+          className="notification-button"
+          onClick={() => {
+            setNotificationOpen((prev) => !prev);
+            setMenuOpen(false);
+          }}
         >
-          <line x1="3" y1="12" x2="21" y2="12" />
-          <line x1="3" y1="6" x2="21" y2="6" />
-          <line x1="3" y1="18" x2="21" y2="18" />
-        </svg>
-      </button>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            fill="#37437D"
+            viewBox="0 0 24 24"
+          >
+            <path d="M12 24c1.104 0 2-.896 2-2h-4c0 1.104.896 2 2 2zm6-6v-5c0-2.486-1.355-4.671-3.5-5.74V6c0-.828-.672-1.5-1.5-1.5S11.5 5.172 11.5 6v1.26C9.355 8.329 8 10.514 8 13v5l-2 2v1h16v-1l-2-2z" />
+          </svg>
+        </button>
+
+        <button
+          className="hamburger-button"
+          onClick={() => {
+            setMenuOpen((prev) => !prev);
+            setNotificationOpen(false);
+          }}
+        >
+          <svg
+            className="hamburger-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </button>
+      </div>
+
+      {/* Desktop meny */}
       <nav className="main-nav">
-        <a
+        {/* <a
           onClick={() => navigate("/app/timeline")}
           className={`nav-item ${isActive("timeline") ? "active" : ""}`}
         >
@@ -54,10 +87,9 @@ function Sidebar() {
               fill="#37437D"
             />
           </svg>
-
           <span>Timeline</span>
           <span className="active-indicator"></span>
-        </a>
+        </a> */}
 
         <a
           onClick={() => navigate("/app/events")}
@@ -99,7 +131,7 @@ function Sidebar() {
           <span className="active-indicator"></span>
         </a>
 
-        <a
+        {/* <a
           onClick={() => navigate("/app/following")}
           className={`nav-item ${isActive("following") ? "active" : ""}`}
         >
@@ -117,31 +149,112 @@ function Sidebar() {
           </svg>
           <span>Following</span>
           <span className="active-indicator"></span>
-        </a>
+        </a> */}
       </nav>
 
       <div className="sidebar-footer">
-        {/* Desktop-knapp */}
         <button className="signout-button" onClick={handleSignOut}>
           Sign Out
         </button>
-
-        {/* Tablet-ikonknapp */}
         <button className="signout-icon-button" onClick={handleSignOut}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <path
-              fill="#37437D"
-              d="M16 13v-2H8V9l-4 3 4 3v-2h8zM20 3H4c-1.1 0-2 .9-2 2v4h2V5h16v14H4v-4H2v4c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
-            />
-          </svg>
+          ⎋
         </button>
       </div>
+
+      {/* Mobil dropdown meny */}
+      {menuOpen && (
+        <div className="mobile-dropdown">
+          <div className="dropdown-section nav-links">
+            <h4 className="dropdown-title">Main Pages</h4>
+            <button
+              onClick={() => {
+                navigate("/app/events");
+                setMenuOpen(false);
+              }}
+            >
+              Events
+            </button>
+            <button
+              onClick={() => {
+                navigate("/app/attending");
+                setMenuOpen(false);
+              }}
+            >
+              Attending
+            </button>
+          </div>
+          <hr />
+          <div className="user-info">
+            <strong>Kevin</strong>
+            <span className="role">User</span>
+          </div>
+          <hr />
+          <div className="dropdown-section">
+            <h4 className="dropdown-title">My Pages</h4>
+            <button
+              onClick={() => {
+                navigate("/app/mypage");
+                setMenuOpen(false);
+              }}
+            >
+              My Page
+            </button>
+            <button
+              onClick={() => {
+                navigate("/app/myevents");
+                setMenuOpen(false);
+              }}
+            >
+              My Events
+            </button>
+            <button
+              onClick={() => {
+                handleSignOut();
+                setMenuOpen(false);
+              }}
+            >
+              Logout
+            </button>
+          </div>
+          <hr />
+          <div className="dropdown-section nav-links">
+            <h4 className="dropdown-title">Settings</h4>
+            <button
+              onClick={() => {
+                setMenuOpen(false);
+              }}
+            >
+              Dark Mode:{"\u00A0"}
+              <span className="status-off">Off</span>
+            </button>
+            <button
+              onClick={() => {
+                setMenuOpen(false);
+              }}
+            >
+              GDPR Settings
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Mobil notis dropdown */}
+      {notificationOpen && (
+        <div className="mobile-notification-dropdown">
+          <h4>Notifications</h4>
+          <ul>
+            <li className="event">
+              <span>New event published</span>
+            </li>
+            <li className="follower">
+              <span>Alice followed you</span>
+            </li>
+            <li className="maintenance">
+              <span>Maintenance tomorrow</span>
+            </li>
+          </ul>
+        </div>
+      )}
     </aside>
   );
 }

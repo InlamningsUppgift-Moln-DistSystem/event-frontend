@@ -1,15 +1,28 @@
+import "./ContactPage.css";
+
 export default function ContactPage() {
   return (
-    <div
-      style={{
-        padding: "4rem",
-        background: "#f9f9f9",
-        minHeight: "100vh",
-        color: "#1a1a1a",
-      }}
-    >
-      <h1>Contact Us</h1>
-      <p>You can reach us via email at contact@example.com</p>
+    <div className="contact-page">
+      <div className="contact-container">
+        <h2 className="contact-title">Contact Us</h2>
+        <p className="contact-subtitle">We’d love to hear from you.</p>
+
+        <form className="contact-form">
+          <label>
+            Name
+            <input type="text" placeholder="Your name" />
+          </label>
+          <label>
+            Email
+            <input type="email" placeholder="you@example.com" />
+          </label>
+          <label>
+            Message
+            <textarea rows="5" placeholder="Write your message..." />
+          </label>
+          <button type="submit">Send Message</button>
+        </form>
+      </div>
     </div>
   );
 }

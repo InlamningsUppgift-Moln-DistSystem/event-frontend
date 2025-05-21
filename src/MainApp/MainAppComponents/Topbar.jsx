@@ -16,21 +16,28 @@ function Topbar() {
 
   const getPageTitle = () => {
     if (pathname.includes("timeline")) return "Timeline";
-    if (pathname.includes("events")) return "Events";
+    if (pathname.includes("events") && !pathname.includes("myevents"))
+      return "Events";
     if (pathname.includes("attending")) return "Attending";
     if (pathname.includes("following")) return "Following";
+    if (pathname.includes("mypage")) return "My Page";
+    if (pathname.includes("myevents")) return "My Events";
     return "Dashboard";
   };
 
   const getPageSubtitle = () => {
     if (pathname.includes("timeline"))
       return "Latest activity from events and organizers.";
-    if (pathname.includes("events"))
+    if (pathname.includes("events") && !pathname.includes("myevents"))
       return "Browse all upcoming events by date.";
     if (pathname.includes("attending"))
       return "Events you’ve marked as attending.";
     if (pathname.includes("following"))
       return "Updates from creators you follow.";
+    if (pathname.includes("mypage"))
+      return "Your account profile and preferences.";
+    if (pathname.includes("myevents"))
+      return "Events you’ve created or manage.";
     return "Welcome back!";
   };
 
@@ -174,8 +181,10 @@ function Topbar() {
           {openMenu === "profile" && (
             <div className="dropdown-menu profile">
               <h4>Account</h4>
-              <button onClick={() => navigate("/account")}>Mina Sidor</button>
-              <button onClick={() => navigate("/my-events")}>My Events</button>
+              <button onClick={() => navigate("/app/mypage")}>My Page</button>
+              <button onClick={() => navigate("/app/myevents")}>
+                My Events
+              </button>
               <button
                 onClick={() => {
                   localStorage.removeItem("token");

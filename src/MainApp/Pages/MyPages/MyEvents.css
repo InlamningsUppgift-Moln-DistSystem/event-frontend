@@ -1,20 +1,20 @@
-/* AttendingPage.css */
+/* MyEvents.css */
 
-.attending-page {
+.my-events-page {
   padding: 24px;
   display: flex;
   flex-direction: column;
   gap: 24px;
 }
 
-.attending-title {
+.my-events-title {
   font-size: 24px;
   font-weight: 700;
   color: #1c2346;
   margin: 0 auto;
 }
 
-.attending-grid {
+.my-events-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 20px;
@@ -64,9 +64,9 @@
   color: #37437d;
 }
 
-.cancel-button {
+.delete-button {
   margin-left: auto;
-  background-color: #883f3f;
+  background-color: #6f2d2d;
   color: #fff;
   border: none;
   padding: 8px 14px;
@@ -76,8 +76,8 @@
   transition: background 0.2s ease;
 }
 
-.cancel-button:hover {
-  background-color: #6d2e2e;
+.delete-button:hover {
+  background-color: #531f1f;
 }
 
 .pagination {

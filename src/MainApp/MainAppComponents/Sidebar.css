@@ -181,3 +181,198 @@
     stroke: #1c2346;
   }
 }
+/* ------------------------
+   Mobilmenyer (< 768px)
+-------------------------*/
+
+/* Gemensamma egenskaper för dropdownblock */
+.mobile-dropdown,
+.mobile-notification-dropdown {
+  position: absolute;
+  top: 60px;
+  left: 0;
+  width: 100%;
+  background-color: #ffffff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  padding: 16px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Anpassning för notifikationsmenyns position */
+.mobile-notification-dropdown {
+  right: 16px;
+  left: auto;
+  max-width: 360px;
+  border-radius: 12px;
+}
+
+/* --------------
+   Mobil Dropdown
+-------------- */
+.mobile-dropdown {
+  border-top: 1px solid #ddd;
+}
+
+/* Användarinformation */
+.mobile-dropdown .user-info {
+  text-align: center;
+}
+.mobile-dropdown .user-info strong {
+  display: block;
+  font-size: 16px;
+  color: #37437d;
+}
+.mobile-dropdown .user-info .role {
+  font-size: 12px;
+  color: #999;
+}
+
+/* Sektioner (t.ex. kontolänkar, inställningar) */
+.mobile-dropdown .dropdown-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.mobile-dropdown .dropdown-section button {
+  padding: 10px;
+  border: none;
+  background-color: #f0f2ff;
+  border-radius: 8px;
+  color: #1c2346;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+}
+.mobile-dropdown .dropdown-section button:hover {
+  background-color: #dbe2ff;
+}
+
+/* -------------------------
+   Mobil Notification Dropdown
+-------------------------- */
+.mobile-notification-dropdown h4 {
+  margin: 0 0 8px;
+  font-size: 14px;
+  color: #777;
+  font-weight: 700;
+}
+
+.mobile-notification-dropdown ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.mobile-notification-dropdown ul li {
+  font-size: 14px;
+  padding: 10px;
+  background: #f9f9f9;
+  border-radius: 6px;
+  margin-bottom: 6px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  border-left: 4px solid #ccc;
+}
+
+.mobile-notification-dropdown ul li.event {
+  border-color: #2d99ff;
+}
+
+.mobile-notification-dropdown ul li.follower {
+  border-color: #f26cf9;
+}
+
+.mobile-notification-dropdown ul li.maintenance {
+  border-color: #f6c343;
+}
+
+.mobile-notification-dropdown ul li span {
+  color: #1c2346;
+  font-weight: 500;
+}
+@media (max-width: 767px) {
+  .mobile-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-left: auto;
+  }
+
+  .notification-button,
+  .hamburger-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+  }
+
+  .notification-button svg,
+  .hamburger-button svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  /* Viktigt: se till att .sidebar är radbaserad layout i mobil */
+  .sidebar {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+/* --------------------------------
+   Visa endast i mobil (< 768px)
+--------------------------------- */
+@media (max-width: 767px) {
+  .mobile-actions,
+  .mobile-dropdown,
+  .mobile-notification-dropdown {
+    display: flex;
+  }
+}
+
+/* -------------------------------
+   Dölj allt mobilrelaterat i desktop
+------------------------------- */
+@media (min-width: 768px) {
+  .mobile-actions,
+  .mobile-dropdown,
+  .mobile-notification-dropdown {
+    display: none !important;
+  }
+}
+@media (min-width: 768px) and (max-width: 1024px) {
+  .active-indicator {
+    display: none !important;
+  }
+}
+/* Endast för mobilmenyns navigationsdel (överst) */
+.mobile-dropdown .nav-links button {
+  background-color: #f0f4ff;
+  color: #1c2346;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.mobile-dropdown .nav-links button:hover {
+  background-color: #dceaff;
+}
+.dropdown-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #777;
+  margin-bottom: 6px;
+  margin-left: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}

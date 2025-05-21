@@ -283,3 +283,21 @@
     margin-top: 36px;
   }
 }
+.auth-footer-links {
+  margin-top: 24px;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  font-size: 13px;
+  flex-wrap: wrap;
+}
+
+.auth-footer-link {
+  color: #1c2346;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.auth-footer-link:hover {
+  text-decoration: underline;
+}

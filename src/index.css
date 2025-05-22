@@ -64,3 +64,11 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+.welcome-area,
+.auth-layout {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(to bottom right, #e8ecff, #f3f7ff);
+}

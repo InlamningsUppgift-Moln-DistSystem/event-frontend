@@ -192,7 +192,7 @@ function Topbar() {
                   localStorage.removeItem("initials");
 
                   setTimeout(() => {
-                    navigate("/", { replace: true });
+                    window.location.href = "/";
                   }, 0);
                 }}
               >

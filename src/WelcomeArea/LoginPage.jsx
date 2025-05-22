@@ -1,11 +1,9 @@
-import { useNavigate } from "react-router-dom";
 import "./LoginPage.css";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { jwtDecode } from "jwt-decode";
 
 function LoginPage() {
-  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [errors, setErrors] = useState({});
@@ -55,7 +53,7 @@ function LoginPage() {
             const now = Date.now() / 1000;
 
             if (decoded.exp > now) {
-              navigate("/app");
+              window.location.href = "/app/events";
             } else {
               setLoginError("Your session has expired. Please login again.");
             }

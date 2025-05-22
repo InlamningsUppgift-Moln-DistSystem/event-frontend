@@ -6,15 +6,13 @@ import { useState } from "react";
 function LoginPage() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [formData, setFormData] = useState({ username: "", password: "" });
   const [errors, setErrors] = useState({});
   const [loginError, setLoginError] = useState("");
 
   const validate = () => {
     const newErrors = {};
-    if (!formData.email.trim()) newErrors.email = "Email is required";
-    else if (!/\S+@\S+\.\S+/.test(formData.email))
-      newErrors.email = "Invalid email format";
+    if (!formData.username.trim()) newErrors.username = "Username is required";
     if (!formData.password.trim()) newErrors.password = "Password is required";
     return newErrors;
   };
@@ -28,7 +26,7 @@ function LoginPage() {
     if (Object.keys(newErrors).length > 0) return;
 
     try {
-      // Rensa eventuell gammal token innan inloggning
+      // Rensa tidigare session
       localStorage.removeItem("token");
       localStorage.removeItem("username");
       localStorage.removeItem("initials");
@@ -52,7 +50,7 @@ function LoginPage() {
       } else if (response.ok && !data.emailConfirmed) {
         setLoginError("Please confirm your email before logging in.");
       } else {
-        setLoginError("Invalid email or password.");
+        setLoginError("Invalid username or password.");
       }
     } catch {
       setLoginError("Server error. Please try again later.");
@@ -75,7 +73,7 @@ function LoginPage() {
           Welcome to <span className="highlight">Ventixe</span>
         </h1>
         <p className="welcome-description">
-          Log in with your email and password to continue.
+          Log in with your username and password to continue.
         </p>
       </section>
 
@@ -85,24 +83,24 @@ function LoginPage() {
             <div className="login-form-wrapper">
               <h2 className="login-header">Login</h2>
               <form onSubmit={handleLogin} className="login-form">
-                {/* Email */}
+                {/* Username */}
                 <div className="form-group">
-                  <label htmlFor="login-email" className="form-label">
-                    Email
+                  <label htmlFor="login-username" className="form-label">
+                    Username
                   </label>
                   <input
-                    type="email"
-                    id="login-email"
+                    type="text"
+                    id="login-username"
                     className="form-input light-bg"
-                    placeholder="Your email address"
-                    autoComplete="email"
-                    value={formData.email}
+                    placeholder="Your username"
+                    autoComplete="username"
+                    value={formData.username}
                     onChange={(e) =>
-                      setFormData({ ...formData, email: e.target.value })
+                      setFormData({ ...formData, username: e.target.value })
                     }
                   />
-                  {errors.email && (
-                    <p className="input-error">{errors.email}</p>
+                  {errors.username && (
+                    <p className="input-error">{errors.username}</p>
                   )}
                 </div>
 

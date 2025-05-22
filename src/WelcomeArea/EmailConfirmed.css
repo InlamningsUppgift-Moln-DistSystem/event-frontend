@@ -1,0 +1,77 @@
+.center-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+  min-height: 100vh;
+  background: linear-gradient(to bottom right, #e8ecff, #f3f7ff);
+}
+
+.confirmation-box {
+  background-color: white;
+  padding: 32px;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  max-width: 500px;
+  width: 100%;
+  animation: fadeIn 0.4s ease-in-out;
+  color: #1c2346;
+}
+
+.confirmation-box h2 {
+  font-size: 1.6rem;
+  margin-bottom: 12px;
+  color: #1c2346;
+}
+
+.confirmation-box p {
+  font-size: 1rem;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.login-button {
+  background-color: #318aff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.login-button:hover {
+  background-color: #1d6ede;
+}
+
+@media (max-width: 480px) {
+  .confirmation-box {
+    padding: 24px 16px;
+    border-radius: 12px;
+  }
+
+  .confirmation-box h2 {
+    font-size: 1.4rem;
+  }
+
+  .confirmation-box p {
+    font-size: 0.95rem;
+  }
+
+  .login-button {
+    width: 100%;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

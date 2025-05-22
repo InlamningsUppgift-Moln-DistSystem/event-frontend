@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import "./EmailConfirmed.css";
 
 function EmailConfirmed() {
   const [searchParams] = useSearchParams();
   const [status, setStatus] = useState("loading");
+  const navigate = useNavigate();
   const email = searchParams.get("email");
 
   useEffect(() => {
@@ -30,29 +32,45 @@ function EmailConfirmed() {
 
   return (
     <main className="login-page">
-      <div
-        className="login-container"
-        style={{ textAlign: "center", marginTop: "80px" }}
-      >
-        {status === "loading" && <p>🔄 Verifying your email...</p>}
-        {status === "confirmed" && (
-          <>
-            <h2>✅ Email confirmed!</h2>
-            <p>You can now log in to your account.</p>
-          </>
-        )}
-        {status === "error" && (
-          <>
-            <h2>❌ Error</h2>
-            <p>Something went wrong while confirming your email.</p>
-          </>
-        )}
-        {status === "invalid" && (
-          <>
-            <h2>⚠️ Invalid request</h2>
-            <p>Email is missing or invalid in the URL.</p>
-          </>
-        )}
+      <div className="login-container center-content">
+        <div className="confirmation-box">
+          {status === "loading" && <p>🔄 Verifying your email...</p>}
+          {status === "confirmed" && (
+            <>
+              <img
+                src="https://cdn-icons-png.flaticon.com/512/845/845646.png"
+                alt="Checkmark"
+                style={{ width: "48px", height: "48px", marginBottom: "16px" }}
+              />
+
+              <h2>✅ Email confirmed!</h2>
+              <p>
+                Your email <b>{email}</b> is now verified. You may now log in.
+              </p>
+              <button className="login-button" onClick={() => navigate("/")}>
+                Back to Login
+              </button>
+            </>
+          )}
+          {status === "error" && (
+            <>
+              <h2>❌ Error</h2>
+              <p>Something went wrong while confirming your email.</p>
+              <button className="login-button" onClick={() => navigate("/")}>
+                Try again
+              </button>
+            </>
+          )}
+          {status === "invalid" && (
+            <>
+              <h2>⚠️ Invalid link</h2>
+              <p>Email address is missing or malformed in the URL.</p>
+              <button className="login-button" onClick={() => navigate("/")}>
+                Back to Login
+              </button>
+            </>
+          )}
+        </div>
       </div>
     </main>
   );

@@ -59,16 +59,18 @@ function RegisterPage() {
   if (submitted) {
     return (
       <main className="login-page">
-        <div className="login-container">
-          <h2 className="signup-title">Check your email</h2>
-          <p className="login-text">
-            A confirmation link has been sent to <b>{formData.email}</b>.
-            <br />
-            Please confirm your email before logging in.
-          </p>
-          <button onClick={() => navigate("/")} className="login-button">
-            Back to Login
-          </button>
+        <div className="center-content">
+          <div className="confirmation-box">
+            <h2 className="signup-title">Check your email</h2>
+            <p className="login-text">
+              A confirmation link has been sent to <b>{formData.email}</b>.
+              <br />
+              Please confirm your email before logging in.
+            </p>
+            <button onClick={() => navigate("/")} className="login-button">
+              Back to Login
+            </button>
+          </div>
         </div>
       </main>
     );

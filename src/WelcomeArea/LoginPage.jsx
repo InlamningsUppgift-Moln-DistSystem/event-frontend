@@ -4,15 +4,59 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 
 function LoginPage() {
-  //Variables
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [errors, setErrors] = useState({});
+  const [loginError, setLoginError] = useState("");
 
-  //functions
-  const handleLogin = (e) => {
+  const validate = () => {
+    const newErrors = {};
+    if (!formData.email.trim()) newErrors.email = "Email is required";
+    else if (!/\S+@\S+\.\S+/.test(formData.email))
+      newErrors.email = "Invalid email format";
+    if (!formData.password.trim()) newErrors.password = "Password is required";
+    return newErrors;
+  };
+
+  const handleLogin = async (e) => {
     e.preventDefault();
-    localStorage.setItem("token", "mock-token");
-    navigate("/app");
+    const newErrors = validate();
+    setErrors(newErrors);
+    setLoginError("");
+
+    if (Object.keys(newErrors).length > 0) return;
+
+    try {
+      // Rensa eventuell gammal token innan inloggning
+      localStorage.removeItem("token");
+      localStorage.removeItem("username");
+      localStorage.removeItem("initials");
+
+      const response = await fetch(
+        "https://authservice-api-e6aghrh5e2gpc4a0.westeurope-01.azurewebsites.net/api/Auth/login",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok && data.emailConfirmed) {
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("username", data.username);
+        localStorage.setItem("initials", data.initials ?? "??");
+        navigate("/app");
+      } else if (response.ok && !data.emailConfirmed) {
+        setLoginError("Please confirm your email before logging in.");
+      } else {
+        setLoginError("Invalid email or password.");
+      }
+    } catch {
+      setLoginError("Server error. Please try again later.");
+    }
   };
 
   return (
@@ -31,8 +75,7 @@ function LoginPage() {
           Welcome to <span className="highlight">Ventixe</span>
         </h1>
         <p className="welcome-description">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus
-          ullamcorper nisl erat, vel convallis elit fermentum pellentesque.
+          Log in with your email and password to continue.
         </p>
       </section>
 
@@ -42,6 +85,7 @@ function LoginPage() {
             <div className="login-form-wrapper">
               <h2 className="login-header">Login</h2>
               <form onSubmit={handleLogin} className="login-form">
+                {/* Email */}
                 <div className="form-group">
                   <label htmlFor="login-email" className="form-label">
                     Email
@@ -49,13 +93,20 @@ function LoginPage() {
                   <input
                     type="email"
                     id="login-email"
-                    name="Email"
                     className="form-input light-bg"
                     placeholder="Your email address"
                     autoComplete="email"
+                    value={formData.email}
+                    onChange={(e) =>
+                      setFormData({ ...formData, email: e.target.value })
+                    }
                   />
+                  {errors.email && (
+                    <p className="input-error">{errors.email}</p>
+                  )}
                 </div>
 
+                {/* Password */}
                 <div className="form-group mb-20">
                   <label htmlFor="login-password" className="form-label">
                     Password
@@ -64,12 +115,14 @@ function LoginPage() {
                     <input
                       type={showPassword ? "text" : "password"}
                       id="login-password"
-                      name="Password"
                       className="form-input light-bg"
                       placeholder="Enter your password"
                       autoComplete="current-password"
+                      value={formData.password}
+                      onChange={(e) =>
+                        setFormData({ ...formData, password: e.target.value })
+                      }
                     />
-
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
@@ -87,7 +140,17 @@ function LoginPage() {
                       {showPassword ? "🔒" : "👁️"}
                     </button>
                   </div>
+                  {errors.password && (
+                    <p className="input-error">{errors.password}</p>
+                  )}
                 </div>
+
+                {/* Login error */}
+                {loginError && (
+                  <p className="input-error" style={{ marginBottom: "10px" }}>
+                    {loginError}
+                  </p>
+                )}
 
                 <button type="submit" className="login-button">
                   Log In
@@ -100,6 +163,7 @@ function LoginPage() {
                   </Link>
                 </p>
               </form>
+
               <nav className="auth-footer-links">
                 <a
                   href="/privacy"

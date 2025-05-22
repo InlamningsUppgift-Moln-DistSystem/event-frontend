@@ -100,3 +100,10 @@
   height: 16px;
   accent-color: #2d99ff; /* modern browsers */
 }
+.input-error {
+  color: #ff4d4f;
+  font-size: 0.85rem;
+  margin-top: 4px;
+  margin-left: 4px;
+  font-weight: 500;
+}

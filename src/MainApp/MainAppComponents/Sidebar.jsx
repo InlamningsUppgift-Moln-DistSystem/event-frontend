@@ -12,7 +12,11 @@ function Sidebar() {
 
   const handleSignOut = () => {
     localStorage.removeItem("token");
-    navigate("/");
+    localStorage.removeItem("username");
+    localStorage.removeItem("initials");
+
+    // Direkt redirect + full reload för att garantera utloggning
+    window.location.href = "/";
   };
 
   return (

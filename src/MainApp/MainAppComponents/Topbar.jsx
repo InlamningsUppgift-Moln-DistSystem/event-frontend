@@ -188,7 +188,12 @@ function Topbar() {
               <button
                 onClick={() => {
                   localStorage.removeItem("token");
-                  navigate("/");
+                  localStorage.removeItem("username");
+                  localStorage.removeItem("initials");
+
+                  setTimeout(() => {
+                    navigate("/", { replace: true });
+                  }, 0);
                 }}
               >
                 Logout

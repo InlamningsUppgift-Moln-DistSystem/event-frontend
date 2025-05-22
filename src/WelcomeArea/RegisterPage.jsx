@@ -52,9 +52,11 @@ function RegisterPage() {
 
       if (response.ok) {
         setSubmitted(true);
+      } else if (Array.isArray(data)) {
+        const message = data.map((e) => e.description).join("\n");
+        setLoginError(message);
       } else {
-        console.error("❌ Register failed:", data);
-        setLoginError(data.message || "Registration failed. Try again.");
+        setLoginError("Registration failed. Try again.");
       }
     } catch (err) {
       console.error("❌ Register error:", err);
@@ -226,28 +228,13 @@ function RegisterPage() {
               </form>
 
               <nav className="auth-footer-links">
-                <a
-                  href="/privacy"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="auth-footer-link"
-                >
+                <a href="/privacy" target="_blank" className="auth-footer-link">
                   Privacy Policy
                 </a>
-                <a
-                  href="/terms"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="auth-footer-link"
-                >
+                <a href="/terms" target="_blank" className="auth-footer-link">
                   Terms
                 </a>
-                <a
-                  href="/contact"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="auth-footer-link"
-                >
+                <a href="/contact" target="_blank" className="auth-footer-link">
                   Contact
                 </a>
               </nav>

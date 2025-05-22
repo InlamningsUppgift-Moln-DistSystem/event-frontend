@@ -48,7 +48,12 @@ function RegisterPage() {
         }
       );
 
-      const data = await response.json();
+      let data = null;
+      try {
+        data = await response.json(); // försök läsa body
+      } catch {
+        data = null; // body är tom (t.ex. från Ok())
+      }
 
       if (response.ok) {
         setSubmitted(true);

@@ -34,6 +34,9 @@ export default function Router() {
             <Route path="/confirm" element={<EmailConfirmed />} />
           </Route>
         )}
+        {isAuthenticated() && (
+          <Route path="/" element={<Navigate to="/app/events" replace />} />
+        )}
 
         {/* Skyddade sidor */}
         <Route

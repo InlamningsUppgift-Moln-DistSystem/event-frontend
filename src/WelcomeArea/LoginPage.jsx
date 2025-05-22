@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import "./LoginPage.css";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { jwtDecode } from "jwt-decode";
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -46,11 +47,24 @@ function LoginPage() {
         localStorage.setItem("token", data.token);
         localStorage.setItem("username", data.username);
         localStorage.setItem("initials", data.initials ?? "??");
-        navigate("/app");
-      } else if (response.ok && !data.emailConfirmed) {
-        setLoginError("Please confirm your email before logging in.");
-      } else {
-        setLoginError("Invalid username or password.");
+
+        const token = data.token;
+        if (token && token.split(".").length === 3) {
+          try {
+            const decoded = jwtDecode(token);
+            const now = Date.now() / 1000;
+
+            if (decoded.exp > now) {
+              navigate("/app");
+            } else {
+              setLoginError("Your session has expired. Please login again.");
+            }
+          } catch {
+            setLoginError("Invalid token received.");
+          }
+        } else {
+          setLoginError("Invalid login response.");
+        }
       }
     } catch {
       setLoginError("Server error. Please try again later.");

@@ -14,6 +14,7 @@ function RegisterPage() {
   });
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [errors, setErrors] = useState({});
+  const [loginError, setLoginError] = useState("");
 
   const validate = () => {
     const newErrors = {};
@@ -33,6 +34,7 @@ function RegisterPage() {
     e.preventDefault();
     const newErrors = validate();
     setErrors(newErrors);
+    setLoginError("");
 
     if (Object.keys(newErrors).length > 0) return;
 
@@ -46,13 +48,17 @@ function RegisterPage() {
         }
       );
 
+      const data = await response.json();
+
       if (response.ok) {
-        setSubmitted(true); // Visa “check your email”-vyn
+        setSubmitted(true);
       } else {
-        alert("Registration failed. Try again.");
+        console.error("❌ Register failed:", data);
+        setLoginError(data.message || "Registration failed. Try again.");
       }
-    } catch {
-      alert("Something went wrong. Try later.");
+    } catch (err) {
+      console.error("❌ Register error:", err);
+      setLoginError("Server error. Please try again later.");
     }
   };
 
@@ -101,6 +107,13 @@ function RegisterPage() {
           <div className="form-toggle-container">
             <div className="signup-form-wrapper">
               <h2 className="signup-title">Create Account</h2>
+
+              {loginError && (
+                <p className="input-error" style={{ marginBottom: "10px" }}>
+                  {loginError}
+                </p>
+              )}
+
               <form onSubmit={handleRegister} className="signup-form">
                 {/* Username */}
                 <div className="form-group">
@@ -200,7 +213,6 @@ function RegisterPage() {
                   )}
                 </div>
 
-                {/* Submit */}
                 <button type="submit" className="login-button">
                   Create Account
                 </button>

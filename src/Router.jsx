@@ -27,11 +27,13 @@ export default function Router() {
     <BrowserRouter>
       <Routes>
         {/* Offentliga sidor */}
-        <Route element={<WelcomeArea />}>
-          <Route path="/" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/confirm" element={<EmailConfirmed />} />
-        </Route>
+        {!isAuthenticated() && (
+          <Route element={<WelcomeArea />}>
+            <Route path="/" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/confirm" element={<EmailConfirmed />} />
+          </Route>
+        )}
 
         {/* Skyddade sidor */}
         <Route

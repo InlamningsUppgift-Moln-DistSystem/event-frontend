@@ -1,14 +1,38 @@
 // Topbar.jsx
 import "./Topbar.css";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 
 function Topbar() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const [openMenu, setOpenMenu] = useState(null);
   const dropdownRef = useRef(null);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await fetch(
+          "https://user-service-api-fgbuhbe9dmgbb3gp.swedencentral-01.azurewebsites.net/api/user/me",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setUser(data);
+        }
+      } catch (error) {
+        console.error("Error fetching user profile:", error);
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   const toggleMenu = (menu) => {
     setOpenMenu(openMenu === menu ? null : menu);
@@ -44,7 +68,7 @@ function Topbar() {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setOpenMenu(null); // Stänger allt
+        setOpenMenu(null);
       }
     };
 
@@ -53,6 +77,10 @@ function Topbar() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  const getInitials = (username) => {
+    return username ? username.slice(0, 2).toUpperCase() : "--";
+  };
 
   return (
     <header className="dashboard-header">
@@ -78,67 +106,15 @@ function Topbar() {
                 <ul>
                   <li className="comment">
                     <span>New comment</span> on your event
-                    <button
-                      className="dismiss-btn"
-                      aria-label="Dismiss notification"
-                    >
-                      <svg viewBox="0 0 24 24">
-                        <path
-                          d="M18 6L6 18M6 6l12 12"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                        />
-                      </svg>
-                    </button>
                   </li>
                   <li className="follower">
                     <span>Follower</span> posted an update
-                    <button
-                      className="dismiss-btn"
-                      aria-label="Dismiss notification"
-                    >
-                      <svg viewBox="0 0 24 24">
-                        <path
-                          d="M18 6L6 18M6 6l12 12"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                        />
-                      </svg>
-                    </button>
                   </li>
                   <li className="event">
                     Your <span>event</span> was approved
-                    <button
-                      className="dismiss-btn"
-                      aria-label="Dismiss notification"
-                    >
-                      <svg viewBox="0 0 24 24">
-                        <path
-                          d="M18 6L6 18M6 6l12 12"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                        />
-                      </svg>
-                    </button>
                   </li>
                   <li className="maintenance">
                     <span>System update</span> scheduled for tonight
-                    <button
-                      className="dismiss-btn"
-                      aria-label="Dismiss notification"
-                    >
-                      <svg viewBox="0 0 24 24">
-                        <path
-                          d="M18 6L6 18M6 6l12 12"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                        />
-                      </svg>
-                    </button>
                   </li>
                 </ul>
               </div>
@@ -157,11 +133,9 @@ function Topbar() {
               <div className="dropdown-menu settings">
                 <h4>Settings</h4>
                 <label className="toggle-option">
-                  <input type="checkbox" />
-                  Dark Mode:{"\u00A0"}
+                  <input type="checkbox" /> Dark Mode:{" "}
                   <span className="status-off">Off</span>
                 </label>
-
                 <button className="settings-button gdpr-button">
                   GDPR Settings
                 </button>
@@ -172,12 +146,23 @@ function Topbar() {
 
         <div className="dropdown-wrapper">
           <div className="user-profile" onClick={() => toggleMenu("profile")}>
-            <div className="profile-avatar"></div>
+            <div className="profile-avatar">
+              {user?.profileImageUrl ? (
+                <img
+                  src={user.profileImageUrl}
+                  alt="profile"
+                  className="avatar-image"
+                />
+              ) : (
+                getInitials(user?.username)
+              )}
+            </div>
             <div className="profile-info">
-              <h2 className="profile-name">Orlando Laurentius</h2>
-              <p className="profile-role">Admin</p>
+              <h2 className="profile-name">{user?.username ?? "Loading..."}</h2>
+              <p className="profile-role">{user?.role ?? "User"}</p>
             </div>
           </div>
+
           {openMenu === "profile" && (
             <div className="dropdown-menu profile">
               <h4>Account</h4>
@@ -190,7 +175,6 @@ function Topbar() {
                   localStorage.removeItem("token");
                   localStorage.removeItem("username");
                   localStorage.removeItem("initials");
-
                   setTimeout(() => {
                     window.location.href = "/";
                   }, 0);

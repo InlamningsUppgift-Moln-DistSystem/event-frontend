@@ -8,11 +8,12 @@ function LoginPage() {
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [errors, setErrors] = useState({});
   const [loginError, setLoginError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const validate = () => {
     const newErrors = {};
-    if (!formData.username.trim()) newErrors.username = "Username is required";
-    if (!formData.password.trim()) newErrors.password = "Password is required";
+    if (!formData.username.trim()) newErrors.username = "Username is required.";
+    if (!formData.password.trim()) newErrors.password = "Password is required.";
     return newErrors;
   };
 
@@ -21,11 +22,10 @@ function LoginPage() {
     const newErrors = validate();
     setErrors(newErrors);
     setLoginError("");
-
     if (Object.keys(newErrors).length > 0) return;
 
+    setLoading(true);
     try {
-      // Rensa tidigare session
       localStorage.removeItem("token");
       localStorage.removeItem("username");
       localStorage.removeItem("initials");
@@ -41,32 +41,40 @@ function LoginPage() {
 
       const data = await response.json();
 
-      if (response.ok && data.emailConfirmed) {
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("username", data.username);
-        localStorage.setItem("initials", data.initials ?? "??");
-
-        const token = data.token;
-        if (token && token.split(".").length === 3) {
-          try {
-            const decoded = jwtDecode(token);
-            const now = Date.now() / 1000;
-
-            if (decoded.exp > now) {
-              window.location.href = "/app/events";
-            } else {
-              setLoginError("Your session has expired. Please login again.");
-            }
-          } catch {
-            setLoginError("Invalid token received.");
-          }
+      if (response.ok) {
+        if (!data.emailConfirmed) {
+          setLoginError(
+            "Your email is not yet confirmed. Please check your inbox."
+          );
         } else {
-          setLoginError("Invalid login response.");
+          localStorage.setItem("token", data.token);
+          localStorage.setItem("username", data.username);
+          localStorage.setItem("initials", data.initials ?? "??");
+
+          const token = data.token;
+          if (token && token.split(".").length === 3) {
+            try {
+              const decoded = jwtDecode(token);
+              const now = Date.now() / 1000;
+              if (decoded.exp > now) {
+                window.location.href = "/app/events";
+              } else {
+                setLoginError("Your session has expired. Please login again.");
+              }
+            } catch {
+              setLoginError("Invalid token received.");
+            }
+          } else {
+            setLoginError("Invalid login response.");
+          }
         }
+      } else {
+        setLoginError("Invalid username or password.");
       }
     } catch {
       setLoginError("Server error. Please try again later.");
     }
+    setLoading(false);
   };
 
   return (
@@ -92,10 +100,19 @@ function LoginPage() {
       <section className="login-section">
         <div className="login-container">
           <div className="form-toggle-container">
-            <div className="login-form-wrapper">
+            <div
+              className="login-form-wrapper"
+              style={{ position: "relative" }}
+            >
               <h2 className="login-header">Login</h2>
+
+              {loading && (
+                <div className="form-loading-overlay">
+                  <div className="spinner"></div>
+                </div>
+              )}
+
               <form onSubmit={handleLogin} className="login-form">
-                {/* Username */}
                 <div className="form-group">
                   <label htmlFor="login-username" className="form-label">
                     Username
@@ -116,7 +133,6 @@ function LoginPage() {
                   )}
                 </div>
 
-                {/* Password */}
                 <div className="form-group mb-20">
                   <label htmlFor="login-password" className="form-label">
                     Password
@@ -155,15 +171,18 @@ function LoginPage() {
                   )}
                 </div>
 
-                {/* Login error */}
                 {loginError && (
                   <p className="input-error" style={{ marginBottom: "10px" }}>
                     {loginError}
                   </p>
                 )}
 
-                <button type="submit" className="login-button">
-                  Log In
+                <button
+                  type="submit"
+                  className="login-button"
+                  disabled={loading}
+                >
+                  {loading ? "Loading..." : "Log In"}
                 </button>
 
                 <p className="signup-prompt">
@@ -175,28 +194,13 @@ function LoginPage() {
               </form>
 
               <nav className="auth-footer-links">
-                <a
-                  href="/privacy"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="auth-footer-link"
-                >
+                <a href="/privacy" className="auth-footer-link">
                   Privacy Policy
                 </a>
-                <a
-                  href="/terms"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="auth-footer-link"
-                >
+                <a href="/terms" className="auth-footer-link">
                   Terms
                 </a>
-                <a
-                  href="/contact"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="auth-footer-link"
-                >
+                <a href="/contact" className="auth-footer-link">
                   Contact
                 </a>
               </nav>

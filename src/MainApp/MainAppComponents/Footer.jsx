@@ -7,28 +7,13 @@ function Footer() {
         <div className="footer-info">
           <p className="copyright">© 2025 Ventixe</p>
           <nav className="footer-links">
-            <a
-              href="/privacy"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="footer-link"
-            >
+            <a href="/privacy" className="footer-link">
               Privacy Policy
             </a>
-            <a
-              href="/terms"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="footer-link"
-            >
+            <a href="/terms" className="footer-link">
               Terms and Conditions
             </a>
-            <a
-              href="/contact"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="footer-link"
-            >
+            <a href="/contact" className="footer-link">
               Contact
             </a>
           </nav>

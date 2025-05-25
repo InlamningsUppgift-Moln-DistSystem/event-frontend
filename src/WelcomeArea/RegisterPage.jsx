@@ -1,4 +1,4 @@
-// RegisterPage with retry confirmation email
+// RegisterPage with retry confirmation email + full validation
 import { useNavigate } from "react-router-dom";
 import "./RegisterPage.css";
 import { useState } from "react";
@@ -22,24 +22,41 @@ function RegisterPage() {
 
   const validate = () => {
     const newErrors = {};
-    if (!formData.username.trim()) newErrors.username = "Username is required.";
-    else if (/\s/.test(formData.username))
-      newErrors.username = "Username cannot contain spaces.";
 
+    // Username
+    if (!formData.username.trim()) newErrors.username = "Username is required.";
+    else if (formData.username.length < 3 || formData.username.length > 20)
+      newErrors.username = "Username must be between 3 and 20 characters.";
+    else if (!/^[a-zA-Z0-9_]+$/.test(formData.username))
+      newErrors.username =
+        "Only letters, numbers and underscores (_) are allowed.";
+
+    // Email
     if (!formData.email.trim()) newErrors.email = "Email is required.";
     else if (!/^\S+@\S+\.\S+$/.test(formData.email))
-      newErrors.email = "Enter a valid email address (e.g. user@example.com).";
+      newErrors.email = "Invalid email format.";
 
+    // Password
     if (!formData.password.trim()) newErrors.password = "Password is required.";
+    else if (formData.password.length < 8)
+      newErrors.password = "Password must be at least 8 characters.";
     else if (
-      formData.password.length < 8 ||
       !/[A-Z]/.test(formData.password) ||
+      !/[a-z]/.test(formData.password) ||
+      !/[0-9]/.test(formData.password) ||
       !/[^a-zA-Z0-9]/.test(formData.password)
-    ) {
+    )
       newErrors.password =
-        "Password must be at least 8 characters, include one uppercase letter and one special character (e.g. !@#$%).";
-    }
+        "Password must include uppercase, lowercase, number and special character.";
+    else if (
+      formData.password
+        .toLowerCase()
+        .includes(formData.username.toLowerCase()) ||
+      formData.password.toLowerCase().includes(formData.email.toLowerCase())
+    )
+      newErrors.password = "Password must not contain your username or email.";
 
+    // Terms
     if (!acceptedTerms)
       newErrors.terms = "You must accept the terms and conditions.";
 
@@ -51,7 +68,6 @@ function RegisterPage() {
     const newErrors = validate();
     setErrors(newErrors);
     setLoginError("");
-
     if (Object.keys(newErrors).length > 0) return;
 
     setLoading(true);
@@ -75,8 +91,16 @@ function RegisterPage() {
       if (response.ok) {
         setSubmitted(true);
       } else if (Array.isArray(data)) {
-        const message = data.map((e) => e.description).join("\n");
-        setLoginError(message);
+        const apiErrors = {};
+        data.forEach((err) => {
+          const code = err.code.toLowerCase();
+          if (code.includes("email")) apiErrors.email = err.description;
+          else if (code.includes("user")) apiErrors.username = err.description;
+          else if (code.includes("password"))
+            apiErrors.password = err.description;
+          else apiErrors.general = err.description;
+        });
+        setErrors(apiErrors);
       } else {
         setLoginError("Registration failed. Try again.");
       }
@@ -103,37 +127,18 @@ function RegisterPage() {
         setResendMessage("✅ Confirmation email resent.");
       } else {
         const errorText = await response.text();
-
-        if (errorText.includes("already confirmed")) {
+        if (errorText.includes("already confirmed"))
           setResendMessage(
             "⚠️ This email is already confirmed. You can log in now."
           );
-        } else if (errorText.includes("not found")) {
+        else if (errorText.includes("not found"))
           setResendMessage("⚠️ No account found with this email.");
-        } else {
-          setResendMessage(
-            <>
-              ❌ Something went wrong. Please{" "}
-              <a href="/contact" style={{ textDecoration: "underline" }}>
-                contact support
-              </a>
-              .
-            </>
-          );
-        }
+        else
+          setResendMessage("❌ Something went wrong. Please contact support.");
       }
     } catch {
-      setResendMessage(
-        <>
-          ❌ Unable to reach server. Please{" "}
-          <a href="/contact" style={{ textDecoration: "underline" }}>
-            contact support
-          </a>
-          .
-        </>
-      );
+      setResendMessage("❌ Unable to reach server. Please contact support.");
     }
-
     setResending(false);
   };
 

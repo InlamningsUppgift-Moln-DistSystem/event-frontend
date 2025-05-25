@@ -12,7 +12,8 @@ function LoginPage() {
 
   const validate = () => {
     const newErrors = {};
-    if (!formData.username.trim()) newErrors.username = "Username is required.";
+    if (!formData.username.trim())
+      newErrors.username = "Username or email is required.";
     if (!formData.password.trim()) newErrors.password = "Password is required.";
     return newErrors;
   };
@@ -43,9 +44,7 @@ function LoginPage() {
 
       if (response.ok) {
         if (!data.emailConfirmed) {
-          setLoginError(
-            "Your email is not yet confirmed. Please check your inbox."
-          );
+          setLoginError("Your email address is not verified.");
         } else {
           localStorage.setItem("token", data.token);
           localStorage.setItem("username", data.username);
@@ -69,7 +68,17 @@ function LoginPage() {
           }
         }
       } else {
-        setLoginError("Invalid username or password.");
+        if (data?.error?.toLowerCase().includes("not verified")) {
+          setLoginError("Your email address is not verified.");
+        } else if (data?.error?.toLowerCase().includes("incorrect password")) {
+          setErrors({ password: "Incorrect password." });
+        } else if (data?.error?.toLowerCase().includes("not found")) {
+          setErrors({ username: "Account not found." });
+        } else if (data?.error?.toLowerCase().includes("required")) {
+          setLoginError(data.error);
+        } else {
+          setLoginError("Login failed. Please check your credentials.");
+        }
       }
     } catch {
       setLoginError("Server error. Please try again later.");

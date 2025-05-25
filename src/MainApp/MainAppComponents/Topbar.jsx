@@ -166,8 +166,20 @@ function Topbar() {
           {openMenu === "profile" && (
             <div className="dropdown-menu profile">
               <h4>Account</h4>
-              <button onClick={() => navigate("/app/mypage")}>My Page</button>
-              <button onClick={() => navigate("/app/myevents")}>
+              <button
+                onClick={() => {
+                  navigate("/app/mypage");
+                  setOpenMenu(null);
+                }}
+              >
+                My Page
+              </button>
+              <button
+                onClick={() => {
+                  navigate("/app/myevents");
+                  setOpenMenu(null);
+                }}
+              >
                 My Events
               </button>
               <button
@@ -175,9 +187,8 @@ function Topbar() {
                   localStorage.removeItem("token");
                   localStorage.removeItem("username");
                   localStorage.removeItem("initials");
-                  setTimeout(() => {
-                    window.location.href = "/";
-                  }, 0);
+                  setOpenMenu(null);
+                  window.location.href = "/";
                 }}
               >
                 Logout

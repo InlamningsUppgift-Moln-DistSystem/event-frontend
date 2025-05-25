@@ -758,6 +758,7 @@
   padding: 4px 0;
   cursor: pointer;
   transition: color 0.2s;
+  padding: 6px 6px;
 }
 
 .dropdown-menu.profile button:hover {

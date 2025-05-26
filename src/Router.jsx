@@ -8,7 +8,7 @@ import PrivacyPage from "./MainApp/Pages/1.SidePages/PrivacyPage";
 import TermsPage from "./MainApp/Pages/1.SidePages/TermsAndConditionPage";
 import ContactPage from "./MainApp/Pages/1.SidePages/ContactPage";
 import EmailConfirmed from "./WelcomeArea/EmailConfirmed";
-import ConfirmNewEmail from "./MyPages/MyPageComponents/ConfirmNewEmail";
+import ConfirmNewEmail from "./MainApp/Pages/MyPages/MyPageComponents/ConfirmNewEmail";
 // 🆕 NY IMPORT
 
 const isAuthenticated = () => {

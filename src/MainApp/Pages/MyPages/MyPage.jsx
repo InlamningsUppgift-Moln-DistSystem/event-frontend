@@ -1,6 +1,10 @@
 // MyPage.jsx
 import { useEffect, useState } from "react";
 import "./MyPage.css";
+import UsernameForm from "./MyPageComponents/UsernameForm";
+import EmailForm from "./MyPageComponents/EmailForm";
+import PasswordForm from "./MyPageComponents/PasswordForm";
+import ImageUploadForm from "./MyPageComponents/ImageUploadForm";
 
 const API_BASE =
   "https://user-service-api-fgbuhbe9dmgbb3gp.swedencentral-01.azurewebsites.net";

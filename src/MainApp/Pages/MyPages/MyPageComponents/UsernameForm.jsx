@@ -7,6 +7,7 @@ const API_BASE =
 function UsernameForm({ onClose }) {
   const [username, setUsername] = useState("");
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
   const token = localStorage.getItem("token");
 
   const validate = (name) => {
@@ -25,6 +26,7 @@ function UsernameForm({ onClose }) {
     const valError = validate(username);
     if (valError) return setError(valError);
 
+    setLoading(true);
     try {
       const res = await fetch(`${API_BASE}/api/user/me/username`, {
         method: "PUT",
@@ -36,7 +38,6 @@ function UsernameForm({ onClose }) {
       });
 
       if (!res.ok) {
-        // Fånga även om svaret är tomt (t.ex. 400 utan body)
         const text = await res.text();
         const data = text ? JSON.parse(text) : {};
         setError(data.message || "Username is already taken.");
@@ -47,10 +48,15 @@ function UsernameForm({ onClose }) {
       console.error("Username update failed:", err);
       setError("Profile update failed. Please try again.");
     }
+    setLoading(false);
   };
 
   return (
-    <form onSubmit={handleSubmit} className="profile-form">
+    <form
+      onSubmit={handleSubmit}
+      className="profile-form"
+      style={{ position: "relative" }}
+    >
       <input
         type="text"
         placeholder="Enter new username"
@@ -59,9 +65,18 @@ function UsernameForm({ onClose }) {
         required
       />
       {error && <p className="input-error">{error}</p>}
+
+      {loading && (
+        <div className="form-loading-overlay">
+          <div className="spinner"></div>
+        </div>
+      )}
+
       <div className="form-actions">
-        <button type="submit">Update</button>
-        <button type="button" onClick={onClose}>
+        <button type="submit" disabled={loading}>
+          {loading ? "Saving..." : "Update"}
+        </button>
+        <button type="button" onClick={onClose} disabled={loading}>
           Cancel
         </button>
       </div>

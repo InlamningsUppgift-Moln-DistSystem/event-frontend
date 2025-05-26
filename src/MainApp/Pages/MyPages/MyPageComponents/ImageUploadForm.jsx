@@ -8,6 +8,7 @@ function ImageUploadForm({ imageUrl, onClose }) {
   const [previewUrl, setPreviewUrl] = useState(imageUrl);
   const [fileName, setFileName] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const token = localStorage.getItem("token");
 
   const handleFileChange = (e) => {
@@ -21,6 +22,7 @@ function ImageUploadForm({ imageUrl, onClose }) {
     if (selected.size > 4 * 1024 * 1024) {
       return setError("File is too large (max 4MB).");
     }
+
     setError("");
     setFile(selected);
     setFileName(selected.name);
@@ -30,9 +32,10 @@ function ImageUploadForm({ imageUrl, onClose }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!file) return setError("No file selected.");
+    setLoading(true);
 
     const formData = new FormData();
-    formData.append("file", file); // ✅ måste matcha [FromForm] IFormFile file
+    formData.append("file", file);
 
     try {
       const res = await fetch(`${API_BASE}/api/user/me/upload-profile-image`, {
@@ -50,13 +53,20 @@ function ImageUploadForm({ imageUrl, onClose }) {
       console.error("Upload error:", err);
       setError("Upload failed. Please try again.");
     }
+
+    setLoading(false);
   };
 
   return (
-    <form onSubmit={handleSubmit} className="profile-form">
+    <form
+      onSubmit={handleSubmit}
+      className="profile-form"
+      style={{ position: "relative" }}
+    >
       {previewUrl && (
         <img src={previewUrl} alt="Preview" className="profile-image-preview" />
       )}
+
       <label htmlFor="image-upload" className="custom-file-upload">
         {fileName || "Choose image"}
       </label>
@@ -67,10 +77,20 @@ function ImageUploadForm({ imageUrl, onClose }) {
         onChange={handleFileChange}
         style={{ display: "none" }}
       />
+
       {error && <p className="input-error">{error}</p>}
+
+      {loading && (
+        <div className="form-loading-overlay">
+          <div className="spinner"></div>
+        </div>
+      )}
+
       <div className="form-actions">
-        <button type="submit">Upload</button>
-        <button type="button" onClick={onClose}>
+        <button type="submit" disabled={loading}>
+          {loading ? "Uploading..." : "Upload"}
+        </button>
+        <button type="button" onClick={onClose} disabled={loading}>
           Cancel
         </button>
       </div>

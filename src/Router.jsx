@@ -8,6 +8,7 @@ import PrivacyPage from "./MainApp/Pages/1.SidePages/PrivacyPage";
 import TermsPage from "./MainApp/Pages/1.SidePages/TermsAndConditionPage";
 import ContactPage from "./MainApp/Pages/1.SidePages/ContactPage";
 import EmailConfirmed from "./WelcomeArea/EmailConfirmed";
+import ConfirmNewEmail from "./WelcomeArea/ConfirmNewEmail"; // 🆕 NY IMPORT
 
 const isAuthenticated = () => {
   const token = localStorage.getItem("token");
@@ -43,6 +44,9 @@ export default function Router() {
           path="/app/*"
           element={isAuthenticated() ? <App /> : <Navigate to="/" replace />}
         />
+
+        {/* ✅ Alltid tillgänglig */}
+        <Route path="/confirm-new-email" element={<ConfirmNewEmail />} />
 
         {/* Statiska sidor */}
         <Route path="/privacy" element={<PrivacyPage />} />

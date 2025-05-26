@@ -40,8 +40,9 @@ function EmailForm({ onClose }) {
       });
 
       if (!res.ok) {
-        const data = await res.json();
-        setError(data.email || data.general || "Email update failed.");
+        const text = await res.text();
+        const data = text ? JSON.parse(text) : {};
+        setError(Object.values(data).join(" ") || "Email update failed.");
       } else {
         setConfirmationSent(true);
       }
@@ -54,7 +55,11 @@ function EmailForm({ onClose }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="profile-form">
+    <form
+      onSubmit={handleSubmit}
+      className="profile-form"
+      style={{ position: "relative" }}
+    >
       <input
         type="email"
         placeholder="Enter new email"
@@ -68,6 +73,12 @@ function EmailForm({ onClose }) {
         <p className="success-message">
           ✅ Confirmation email sent to <b>{email}</b>
         </p>
+      )}
+
+      {loading && (
+        <div className="form-loading-overlay">
+          <div className="spinner"></div>
+        </div>
       )}
 
       <div className="form-actions">

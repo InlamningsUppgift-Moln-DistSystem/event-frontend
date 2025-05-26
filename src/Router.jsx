@@ -8,7 +8,8 @@ import PrivacyPage from "./MainApp/Pages/1.SidePages/PrivacyPage";
 import TermsPage from "./MainApp/Pages/1.SidePages/TermsAndConditionPage";
 import ContactPage from "./MainApp/Pages/1.SidePages/ContactPage";
 import EmailConfirmed from "./WelcomeArea/EmailConfirmed";
-import ConfirmNewEmail from "./WelcomeArea/ConfirmNewEmail"; // 🆕 NY IMPORT
+import ConfirmNewEmail from "./MyPages/MyPageComponents/ConfirmNewEmail";
+// 🆕 NY IMPORT
 
 const isAuthenticated = () => {
   const token = localStorage.getItem("token");

@@ -9,7 +9,7 @@
 /* Header med titel och knapp */
 .my-events-header {
   display: flex;
-  justify-content: flex-end; /* ändrad från space-between */
+  justify-content: flex-end;
   align-items: center;
   flex-wrap: wrap;
 }
@@ -171,6 +171,7 @@
   text-align: center;
 }
 
+/* Formulär */
 .event-form label {
   display: flex;
   flex-direction: column;
@@ -186,6 +187,18 @@
   font-size: 14px;
 }
 
+.event-form input.error {
+  border-color: red;
+}
+
+.error-message {
+  color: red;
+  font-size: 13px;
+  margin-top: 4px;
+  margin-left: 4px;
+}
+
+/* Knappsektion */
 .form-buttons {
   display: flex;
   justify-content: space-between;
@@ -215,6 +228,24 @@
 
 .cancel-button:hover {
   background-color: #aaa;
+}
+
+/* Spinner */
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 3px solid #ccc;
+  border-top-color: #37437d;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-left: 8px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Responsivitet */

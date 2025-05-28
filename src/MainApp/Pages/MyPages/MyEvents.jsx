@@ -163,8 +163,11 @@ function MyEvents() {
                   type="text"
                   value={form.title}
                   onChange={(e) => setForm({ ...form, title: e.target.value })}
+                  className={errors.title ? "error" : ""}
                 />
-                {errors.title && <p className="error-text">{errors.title}</p>}
+                {errors.title && (
+                  <p className="error-message">{errors.title}</p>
+                )}
               </label>
               <label>
                 Location
@@ -174,9 +177,10 @@ function MyEvents() {
                   onChange={(e) =>
                     setForm({ ...form, location: e.target.value })
                   }
+                  className={errors.location ? "error" : ""}
                 />
                 {errors.location && (
-                  <p className="error-text">{errors.location}</p>
+                  <p className="error-message">{errors.location}</p>
                 )}
               </label>
               <label>
@@ -186,8 +190,9 @@ function MyEvents() {
                   min={new Date().toISOString().split("T")[0]}
                   value={form.date}
                   onChange={(e) => setForm({ ...form, date: e.target.value })}
+                  className={errors.date ? "error" : ""}
                 />
-                {errors.date && <p className="error-text">{errors.date}</p>}
+                {errors.date && <p className="error-message">{errors.date}</p>}
               </label>
               <div className="form-buttons">
                 <button type="submit" disabled={isSubmitting}>

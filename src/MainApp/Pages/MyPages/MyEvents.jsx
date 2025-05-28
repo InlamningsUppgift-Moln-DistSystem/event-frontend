@@ -164,8 +164,36 @@ function MyEvents() {
     setShowEditModal(true);
   };
 
+  const ImageUploadBox = () => (
+    <div
+      className="image-upload-box"
+      onClick={() => document.getElementById("imageInput").click()}
+    >
+      {previewUrl ? (
+        <img src={previewUrl} alt="Preview" className="image-preview" />
+      ) : (
+        <div className="placeholder-box">
+          <div className="plus-sign">+</div>
+          <div className="add-text">Add Picture</div>
+        </div>
+      )}
+      <input
+        id="imageInput"
+        type="file"
+        accept="image/*"
+        style={{ display: "none" }}
+        onChange={(e) => {
+          const file = e.target.files[0];
+          setForm({ ...form, image: file });
+          setPreviewUrl(URL.createObjectURL(file));
+        }}
+      />
+    </div>
+  );
+
   const renderFormFields = (isEdit = false, onSubmit) => (
     <form onSubmit={onSubmit} className="event-form">
+      <ImageUploadBox />
       <label>
         Title
         <input
@@ -173,7 +201,7 @@ function MyEvents() {
           value={form.title}
           onChange={(e) => setForm({ ...form, title: e.target.value })}
         />
-        {errors.title && <span className="form-error">{errors.title}</span>}
+        {errors.title && <span className="error-message">{errors.title}</span>}
       </label>
       <label>
         Location
@@ -183,7 +211,7 @@ function MyEvents() {
           onChange={(e) => setForm({ ...form, location: e.target.value })}
         />
         {errors.location && (
-          <span className="form-error">{errors.location}</span>
+          <span className="error-message">{errors.location}</span>
         )}
       </label>
       <label>
@@ -194,23 +222,8 @@ function MyEvents() {
           min={new Date().toISOString().split("T")[0]}
           onChange={(e) => setForm({ ...form, date: e.target.value })}
         />
-        {errors.date && <span className="form-error">{errors.date}</span>}
+        {errors.date && <span className="error-message">{errors.date}</span>}
       </label>
-      <label>
-        {isEdit ? "Replace Image" : "Image"}
-        <input
-          type="file"
-          accept="image/*"
-          onChange={(e) => {
-            const file = e.target.files[0];
-            setForm({ ...form, image: file });
-            setPreviewUrl(URL.createObjectURL(file));
-          }}
-        />
-      </label>
-      {previewUrl && (
-        <img className="image-preview" src={previewUrl} alt="preview" />
-      )}
       <div className="form-buttons">
         <button type="submit" disabled={isSubmitting}>
           {isSubmitting

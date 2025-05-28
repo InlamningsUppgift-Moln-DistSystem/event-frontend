@@ -41,10 +41,37 @@ function MyEvents() {
 
   const validateForm = () => {
     const newErrors = {};
+
+    // Titel
     if (!form.title.trim()) newErrors.title = "Title is required.";
+    else if (form.title.length < 3)
+      newErrors.title = "Title must be at least 3 characters.";
+
+    // Plats
     if (!form.location.trim()) newErrors.location = "Location is required.";
+    else if (form.location.length < 3)
+      newErrors.location = "Location must be at least 3 characters.";
+
+    // Datum
     if (!form.date) newErrors.date = "Date is required.";
-    if (!form.image) newErrors.image = "Image is required.";
+    else {
+      const selected = new Date(form.date);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      if (selected < today)
+        newErrors.date = "Date must be today or in the future.";
+    }
+
+    // Bild (endast krav vid create)
+    if (!form.image && !selectedEvent) {
+      newErrors.image = "Image is required.";
+    } else if (form.image) {
+      const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
+      if (!allowedTypes.includes(form.image.type)) {
+        newErrors.image = "Only JPG or PNG images are allowed.";
+      }
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };

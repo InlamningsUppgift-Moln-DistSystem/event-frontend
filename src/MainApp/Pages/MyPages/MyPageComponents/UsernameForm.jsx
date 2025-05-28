@@ -28,13 +28,13 @@ function UsernameForm({ onClose }) {
 
     setLoading(true);
     try {
-      const res = await fetch(`${API_BASE}/api/user/me/username`, {
-        method: "PUT",
+      const res = await fetch(`${API_BASE}/api/user/me`, {
+        method: "PATCH",
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(username),
+        body: JSON.stringify({ username }),
       });
 
       if (!res.ok) {

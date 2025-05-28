@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 const API_BASE =
   "https://user-service-api-fgbuhbe9dmgbb3gp.swedencentral-01.azurewebsites.net";
 
@@ -45,8 +46,8 @@ function PasswordForm({ onClose }) {
     }
 
     try {
-      const res = await fetch(`${API_BASE}/api/user/me/password`, {
-        method: "PUT",
+      const res = await fetch(`${API_BASE}/api/user/me`, {
+        method: "PATCH",
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",

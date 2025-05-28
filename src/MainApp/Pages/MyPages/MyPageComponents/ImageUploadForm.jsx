@@ -39,7 +39,7 @@ function ImageUploadForm({ imageUrl, onClose }) {
 
     try {
       const res = await fetch(`${API_BASE}/api/user/me/upload-profile-image`, {
-        method: "POST",
+        method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
         },

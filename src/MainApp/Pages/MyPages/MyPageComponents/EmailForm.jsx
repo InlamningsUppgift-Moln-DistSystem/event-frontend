@@ -30,8 +30,8 @@ function EmailForm({ onClose }) {
     }
 
     try {
-      const res = await fetch(`${USER_API}/api/user/me/email`, {
-        method: "PUT",
+      const res = await fetch(`${USER_API}/api/user/me`, {
+        method: "PATCH",
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -71,7 +71,7 @@ function EmailForm({ onClose }) {
       {error && <p className="input-error">{error}</p>}
       {confirmationSent && (
         <p className="success-message">
-          ✅ Confirmation email sent to <b>{email}</b>
+          ✅ Email updated. A confirmation link will be sent to <b>{email}</b>
         </p>
       )}
 

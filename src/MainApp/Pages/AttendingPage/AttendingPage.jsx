@@ -18,7 +18,7 @@ export default function AttendingPage() {
     const token = localStorage.getItem("token");
     if (!token) return;
 
-    fetch(`${API_BASE}/api/events/attending`, {
+    fetch(`${API_BASE}/api/events/my-attending`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => {

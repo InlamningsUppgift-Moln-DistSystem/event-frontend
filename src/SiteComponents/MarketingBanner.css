@@ -1,0 +1,22 @@
+.marketing-banner {
+  background-color: #eaf0ff;
+  padding: 16px 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #1c2346;
+  border-bottom: 1px solid #ccd6f6;
+  margin-top: 60px;
+}
+
+.marketing-logo {
+  height: 40px; /* eller prova 48px om du vill ha större */
+  width: auto;
+}
+
+.marketing-text {
+  font-size: 16px;
+}

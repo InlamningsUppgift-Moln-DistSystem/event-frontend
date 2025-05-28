@@ -1,9 +1,8 @@
-// Topbar.jsx
 import "./Topbar.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 
-function Topbar() {
+function Topbar({ openGdprModal }) {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const [openMenu, setOpenMenu] = useState(null);
@@ -90,38 +89,6 @@ function Topbar() {
       </div>
 
       <nav className="header-controls" ref={dropdownRef}>
-        {/* <div className="dropdown-wrapper">
-          <button
-            className="control-button"
-            aria-label="Notifications"
-            onClick={() => toggleMenu("notifications")}
-          >
-            🔔
-            {openMenu === "notifications" && (
-              <div
-                className="dropdown-menu notifications"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <h4>Notifications</h4>
-                <ul>
-                  <li className="comment">
-                    <span>New comment</span> on your event
-                  </li>
-                  <li className="follower">
-                    <span>Follower</span> posted an update
-                  </li>
-                  <li className="event">
-                    Your <span>event</span> was approved
-                  </li>
-                  <li className="maintenance">
-                    <span>System update</span> scheduled for tonight
-                  </li>
-                </ul>
-              </div>
-            )}
-          </button>
-        </div> */}
-
         <div className="dropdown-wrapper">
           <button
             className="control-button"
@@ -132,11 +99,13 @@ function Topbar() {
             {openMenu === "settings" && (
               <div className="dropdown-menu settings">
                 <h4>Settings</h4>
-                {/* <label className="toggle-option">
-                  <input type="checkbox" /> Dark Mode:{" "}
-                  <span className="status-off">Off</span>
-                </label> */}
-                <button className="settings-button gdpr-button">
+                <button
+                  className="settings-button gdpr-button"
+                  onClick={() => {
+                    openGdprModal();
+                    setOpenMenu(null);
+                  }}
+                >
                   GDPR Settings
                 </button>
               </div>

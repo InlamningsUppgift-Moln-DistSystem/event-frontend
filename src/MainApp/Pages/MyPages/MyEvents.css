@@ -1,9 +1,10 @@
-/* --- Redan befintlig struktur behålls --- */
+/* === Allmän layout === */
 .my-events-page {
   padding: 24px;
   display: flex;
   flex-direction: column;
   gap: 24px;
+  background-color: #ffffff;
 }
 
 .my-events-header {
@@ -13,13 +14,7 @@
   flex-wrap: wrap;
 }
 
-.my-events-title {
-  font-size: 24px;
-  font-weight: 700;
-  color: #1c2346;
-  margin: 0;
-}
-
+/* === Skapa-knapp === */
 .create-event-button {
   padding: 10px 16px;
   background-color: #37437d;
@@ -30,12 +25,83 @@
   cursor: pointer;
   transition: background 0.2s ease;
 }
-
 .create-event-button:hover {
   background-color: #2b2f55;
 }
 
-/* --- Bilduppladdningsruta --- */
+/* === Eventkort === */
+.my-events-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+.event-card {
+  background-color: #f8f9fb;
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+.event-image {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 12px;
+  background-color: #e0e0e0;
+}
+.card-badge {
+  align-self: flex-start;
+  background-color: #eeefff;
+  color: #37437d;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 8px;
+  margin: 12px 0 8px;
+}
+.card-content h3 {
+  font-size: 16px;
+  margin: 0 0 4px;
+  color: #1c2346;
+}
+.card-content p {
+  font-size: 14px;
+  color: #555;
+  margin: 0 0 6px;
+}
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  margin-top: 12px;
+}
+.event-date {
+  color: #37437d;
+}
+.edit-button,
+.delete-button {
+  background-color: #f1f2f7;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.edit-button:hover {
+  background-color: #e2e3f0;
+}
+.delete-button {
+  background-color: #df4e4e;
+  color: white;
+}
+.delete-button:hover {
+  background-color: #c13d3d;
+}
+
+/* === Bilduppladdning === */
 .image-upload-box {
   width: 100%;
   height: 180px;
@@ -51,35 +117,30 @@
   overflow: hidden;
   transition: border-color 0.3s ease;
 }
-
 .image-upload-box:hover {
   border-color: #888;
 }
-
 .image-upload-box img.image-preview {
   width: 100%;
   height: 100%;
   object-fit: cover;
   border-radius: 12px;
 }
-
 .placeholder-box {
   text-align: center;
   color: #888;
 }
-
 .placeholder-box .plus-sign {
   font-size: 32px;
   font-weight: bold;
   line-height: 1;
 }
-
 .placeholder-box .add-text {
   font-size: 14px;
   margin-top: 4px;
 }
 
-/* --- Formulär --- */
+/* === Formulär === */
 .event-form label {
   display: flex;
   flex-direction: column;
@@ -87,18 +148,15 @@
   color: #37437d;
   gap: 4px;
 }
-
 .event-form input {
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 8px;
   font-size: 14px;
 }
-
 .event-form input.error {
   border-color: red;
 }
-
 .error-message {
   color: red;
   font-size: 13px;
@@ -106,14 +164,13 @@
   margin-left: 4px;
 }
 
-/* --- Knappar --- */
+/* === Knappar === */
 .form-buttons {
   display: flex;
   justify-content: space-between;
   gap: 12px;
   margin-top: 12px;
 }
-
 .event-form button,
 .cancel-button {
   flex: 1;
@@ -123,22 +180,19 @@
   cursor: pointer;
   border: none;
 }
-
 .event-form button[type="submit"] {
   background-color: #37437d;
   color: white;
 }
-
 .cancel-button {
   background-color: #ccc;
   color: #333;
 }
-
 .cancel-button:hover {
   background-color: #aaa;
 }
 
-/* Modal + övrigt oförändrat */
+/* === Modal === */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -149,7 +203,6 @@
   align-items: center;
   padding: 16px;
 }
-
 .modal-content {
   background: white;
   padding: 24px;
@@ -161,7 +214,6 @@
   flex-direction: column;
   gap: 16px;
 }
-
 .modal-content h3 {
   margin-top: 0;
   font-size: 20px;
@@ -169,11 +221,11 @@
   text-align: center;
 }
 
+/* === Responsivitet === */
 @media (max-width: 480px) {
   .form-buttons {
     flex-direction: column;
   }
-
   .image-upload-box {
     height: 160px;
   }

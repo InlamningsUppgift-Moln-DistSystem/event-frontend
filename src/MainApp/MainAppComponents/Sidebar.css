@@ -363,6 +363,23 @@
   text-align: left;
   cursor: pointer;
 }
+.mobile-dropdown {
+  max-height: 85vh; /* eller 80vh beroende på hur mycket du vill visa */
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #ccc transparent;
+}
+.mobile-dropdown::-webkit-scrollbar {
+  width: 6px;
+}
+.mobile-dropdown::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 4px;
+}
+.mobile-dropdown::-webkit-scrollbar-track {
+  background: transparent;
+}
 
 .mobile-dropdown .nav-links button:hover {
   background-color: #dceaff;

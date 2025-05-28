@@ -29,7 +29,7 @@ function Sidebar({ openGdprModal }) {
       </div>
 
       <div className="mobile-actions">
-        <button
+        {/* <button
           className="notification-button"
           onClick={() => {
             // setNotificationOpen((prev) => !prev);
@@ -37,7 +37,7 @@ function Sidebar({ openGdprModal }) {
           }}
         >
           🔔
-        </button>
+        </button> */}
 
         <button
           className="hamburger-button"
@@ -134,14 +134,14 @@ function Sidebar({ openGdprModal }) {
           <hr />
           <div className="dropdown-section nav-links">
             <h4 className="dropdown-title">Settings</h4>
-            <button
+            {/* <button
               onClick={() => {
                 // placeholder for dark mode toggle
                 setMenuOpen(false);
               }}
             >
               Dark Mode: <span className="status-off">Off</span>
-            </button>
+            </button> */}
             <button
               onClick={() => {
                 openGdprModal();

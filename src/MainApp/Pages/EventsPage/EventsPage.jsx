@@ -108,10 +108,25 @@ export default function EventsPage() {
     })
       .then((res) => {
         if (res.ok) {
+          // Uppdatera attendingEventIds
           setAttendingEventIds((prev) =>
             isAttending
               ? prev.filter((id) => id !== eventId)
               : [...prev, eventId]
+          );
+
+          // Uppdatera attendeeCount direkt på kortet
+          setEvents((prevEvents) =>
+            prevEvents.map((e) =>
+              e.id === eventId
+                ? {
+                    ...e,
+                    attendeeCount: isAttending
+                      ? Math.max(0, e.attendeeCount - 1)
+                      : e.attendeeCount + 1,
+                  }
+                : e
+            )
           );
         }
       })

@@ -52,8 +52,6 @@ export default function AttendingPage() {
 
   return (
     <div className="attending-page">
-      <h2 className="attending-title">Events You're Attending</h2>
-
       <section className="attending-grid">
         {paginatedEvents.map((event) => (
           <div className="event-card" key={event.id}>

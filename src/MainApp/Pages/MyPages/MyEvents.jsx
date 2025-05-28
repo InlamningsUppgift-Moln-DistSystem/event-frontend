@@ -8,8 +8,15 @@ function MyEvents() {
   const [events, setEvents] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
-  const [form, setForm] = useState({ title: "", location: "", date: "" });
+  const [form, setForm] = useState({
+    title: "",
+    location: "",
+    date: "",
+    image: null,
+  });
+  const [previewUrl, setPreviewUrl] = useState(null);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -41,12 +48,31 @@ function MyEvents() {
     return Object.keys(newErrors).length === 0;
   };
 
+  const uploadImage = async (file, oldImageUrl = null) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    if (oldImageUrl) formData.append("oldImageUrl", oldImageUrl);
+
+    const res = await fetch(`${API_BASE}/api/Events/upload-image`, {
+      method: "PUT",
+      headers: { Authorization: `Bearer ${token}` },
+      body: formData,
+    });
+    const data = await res.json();
+    return data.imageUrl;
+  };
+
   const handleCreateEvent = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
 
     setIsSubmitting(true);
     try {
+      let imageUrl = "";
+      if (form.image) {
+        imageUrl = await uploadImage(form.image);
+      }
+
       const res = await fetch(`${API_BASE}/api/Events`, {
         method: "POST",
         headers: {
@@ -57,12 +83,54 @@ function MyEvents() {
           title: form.title,
           location: form.location,
           startDate: form.date,
+          imageUrl,
         }),
       });
+
       const newEvent = await res.json();
       setEvents([newEvent, ...events]);
       setShowCreateModal(false);
-      setForm({ title: "", location: "", date: "" });
+      setForm({ title: "", location: "", date: "", image: null });
+      setPreviewUrl(null);
+      setErrors({});
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleEditEvent = async (e) => {
+    e.preventDefault();
+    if (!validateForm()) return;
+
+    setIsSubmitting(true);
+    try {
+      let imageUrl = selectedEvent.imageUrl;
+      if (form.image) {
+        imageUrl = await uploadImage(form.image, selectedEvent.imageUrl);
+      }
+
+      const res = await fetch(`${API_BASE}/api/Events/${selectedEvent.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          title: form.title,
+          location: form.location,
+          startDate: form.date,
+          imageUrl,
+        }),
+      });
+
+      const updated = await res.json();
+      setEvents(events.map((e) => (e.id === updated.id ? updated : e)));
+      setShowEditModal(false);
+      setSelectedEvent(null);
+      setForm({ title: "", location: "", date: "", image: null });
+      setPreviewUrl(null);
       setErrors({});
     } catch (err) {
       console.error(err);
@@ -83,17 +151,88 @@ function MyEvents() {
     }
   };
 
-  const handleSelectEvent = async (id) => {
-    try {
-      const res = await fetch(`${API_BASE}/api/Events/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const data = await res.json();
-      setSelectedEvent(data);
-    } catch (err) {
-      console.error(err);
-    }
+  const openEditModal = (event) => {
+    setSelectedEvent(event);
+    setForm({
+      title: event.title,
+      location: event.location,
+      date: event.startDate.split("T")[0],
+      image: null,
+    });
+    setPreviewUrl(event.imageUrl || null);
+    setErrors({});
+    setShowEditModal(true);
   };
+
+  const renderFormFields = (isEdit = false, onSubmit) => (
+    <form onSubmit={onSubmit} className="event-form">
+      <label>
+        Title
+        <input
+          type="text"
+          value={form.title}
+          onChange={(e) => setForm({ ...form, title: e.target.value })}
+        />
+        {errors.title && <span className="form-error">{errors.title}</span>}
+      </label>
+      <label>
+        Location
+        <input
+          type="text"
+          value={form.location}
+          onChange={(e) => setForm({ ...form, location: e.target.value })}
+        />
+        {errors.location && (
+          <span className="form-error">{errors.location}</span>
+        )}
+      </label>
+      <label>
+        Date
+        <input
+          type="date"
+          value={form.date}
+          min={new Date().toISOString().split("T")[0]}
+          onChange={(e) => setForm({ ...form, date: e.target.value })}
+        />
+        {errors.date && <span className="form-error">{errors.date}</span>}
+      </label>
+      <label>
+        {isEdit ? "Replace Image" : "Image"}
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => {
+            const file = e.target.files[0];
+            setForm({ ...form, image: file });
+            setPreviewUrl(URL.createObjectURL(file));
+          }}
+        />
+      </label>
+      {previewUrl && (
+        <img className="image-preview" src={previewUrl} alt="preview" />
+      )}
+      <div className="form-buttons">
+        <button type="submit" disabled={isSubmitting}>
+          {isSubmitting
+            ? isEdit
+              ? "Updating..."
+              : "Creating..."
+            : isEdit
+            ? "Update"
+            : "Create"}
+        </button>
+        <button
+          type="button"
+          className="cancel-button"
+          onClick={() =>
+            isEdit ? setShowEditModal(false) : setShowCreateModal(false)
+          }
+        >
+          Cancel
+        </button>
+      </div>
+    </form>
+  );
 
   return (
     <div className="my-events-page">
@@ -108,12 +247,12 @@ function MyEvents() {
 
       <section className="my-events-grid">
         {paginatedEvents.map((event) => (
-          <div
-            className="event-card"
-            key={event.id}
-            onClick={() => handleSelectEvent(event.id)}
-          >
-            <div className="event-image-placeholder" />
+          <div className="event-card" key={event.id}>
+            <img
+              className="event-image"
+              src={event.imageUrl || "/placeholder.jpg"}
+              alt={event.title}
+            />
             <div className="card-badge">Created</div>
             <div className="card-content">
               <h3>{event.title}</h3>
@@ -124,11 +263,14 @@ function MyEvents() {
                   📅 {new Date(event.startDate).toDateString()}
                 </span>
                 <button
+                  className="edit-button"
+                  onClick={() => openEditModal(event)}
+                >
+                  Edit
+                </button>
+                <button
                   className="delete-button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleDelete(event.id);
-                  }}
+                  onClick={() => handleDelete(event.id)}
                 >
                   Delete
                 </button>
@@ -156,81 +298,16 @@ function MyEvents() {
         <div className="modal-overlay">
           <div className="modal-content">
             <h3>Create New Event</h3>
-            <form onSubmit={handleCreateEvent} className="event-form">
-              <label>
-                Title
-                <input
-                  type="text"
-                  value={form.title}
-                  onChange={(e) => setForm({ ...form, title: e.target.value })}
-                  className={errors.title ? "error" : ""}
-                />
-                {errors.title && (
-                  <p className="error-message">{errors.title}</p>
-                )}
-              </label>
-              <label>
-                Location
-                <input
-                  type="text"
-                  value={form.location}
-                  onChange={(e) =>
-                    setForm({ ...form, location: e.target.value })
-                  }
-                  className={errors.location ? "error" : ""}
-                />
-                {errors.location && (
-                  <p className="error-message">{errors.location}</p>
-                )}
-              </label>
-              <label>
-                Date
-                <input
-                  type="date"
-                  min={new Date().toISOString().split("T")[0]}
-                  value={form.date}
-                  onChange={(e) => setForm({ ...form, date: e.target.value })}
-                  className={errors.date ? "error" : ""}
-                />
-                {errors.date && <p className="error-message">{errors.date}</p>}
-              </label>
-              <div className="form-buttons">
-                <button type="submit" disabled={isSubmitting}>
-                  {isSubmitting ? "Creating..." : "Create"}
-                </button>
-                <button
-                  type="button"
-                  className="cancel-button"
-                  onClick={() => setShowCreateModal(false)}
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
+            {renderFormFields(false, handleCreateEvent)}
           </div>
         </div>
       )}
 
-      {selectedEvent && (
-        <div className="modal-overlay" onClick={() => setSelectedEvent(null)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <h3>{selectedEvent.title}</h3>
-            <p>
-              <strong>Location:</strong> {selectedEvent.location}
-            </p>
-            <p>
-              <strong>Date:</strong>{" "}
-              {new Date(selectedEvent.startDate).toDateString()}
-            </p>
-            <p>
-              <strong>Attendees:</strong> {selectedEvent.attendeeCount}
-            </p>
-            <button
-              className="cancel-button"
-              onClick={() => setSelectedEvent(null)}
-            >
-              ❌ Close
-            </button>
+      {showEditModal && selectedEvent && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h3>Edit Event</h3>
+            {renderFormFields(true, handleEditEvent)}
           </div>
         </div>
       )}

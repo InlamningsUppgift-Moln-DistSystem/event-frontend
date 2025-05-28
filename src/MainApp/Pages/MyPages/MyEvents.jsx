@@ -10,6 +10,8 @@ function MyEvents() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [form, setForm] = useState({ title: "", location: "", date: "" });
+  const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const token = localStorage.getItem("token");
   const eventsPerPage = 10;
@@ -30,8 +32,20 @@ function MyEvents() {
     }
   }, []);
 
+  const validateForm = () => {
+    const newErrors = {};
+    if (!form.title.trim()) newErrors.title = "Title is required.";
+    if (!form.location.trim()) newErrors.location = "Location is required.";
+    if (!form.date) newErrors.date = "Date is required.";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleCreateEvent = async (e) => {
     e.preventDefault();
+    if (!validateForm()) return;
+
+    setIsSubmitting(true);
     try {
       const res = await fetch(`${API_BASE}/api/Events`, {
         method: "POST",
@@ -49,8 +63,11 @@ function MyEvents() {
       setEvents([newEvent, ...events]);
       setShowCreateModal(false);
       setForm({ title: "", location: "", date: "" });
+      setErrors({});
     } catch (err) {
       console.error(err);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -144,33 +161,38 @@ function MyEvents() {
                 Title
                 <input
                   type="text"
-                  required
                   value={form.title}
                   onChange={(e) => setForm({ ...form, title: e.target.value })}
                 />
+                {errors.title && <p className="error-text">{errors.title}</p>}
               </label>
               <label>
                 Location
                 <input
                   type="text"
-                  required
                   value={form.location}
                   onChange={(e) =>
                     setForm({ ...form, location: e.target.value })
                   }
                 />
+                {errors.location && (
+                  <p className="error-text">{errors.location}</p>
+                )}
               </label>
               <label>
                 Date
                 <input
                   type="date"
-                  required
+                  min={new Date().toISOString().split("T")[0]}
                   value={form.date}
                   onChange={(e) => setForm({ ...form, date: e.target.value })}
                 />
+                {errors.date && <p className="error-text">{errors.date}</p>}
               </label>
               <div className="form-buttons">
-                <button type="submit">Create</button>
+                <button type="submit" disabled={isSubmitting}>
+                  {isSubmitting ? "Creating..." : "Create"}
+                </button>
                 <button
                   type="button"
                   className="cancel-button"

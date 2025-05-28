@@ -35,7 +35,6 @@ export default function EventsPage() {
     currentPage * eventsPerPage
   );
 
-  // Hämta userId
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) return;
@@ -50,10 +49,10 @@ export default function EventsPage() {
       .catch(console.error);
   }, []);
 
-  // Hämta events och vilka man attend:ar
   useEffect(() => {
     if (!userId) return;
 
+    // 1. Hämta events
     fetch(
       `${API_BASE}/api/Events/month?year=${currentYear}&month=${
         currentMonth + 1
@@ -65,12 +64,16 @@ export default function EventsPage() {
           (a, b) => new Date(a.startDate) - new Date(b.startDate)
         );
         setEvents(sorted);
-
-        const attending = sorted
-          .filter((e) => e.attendees?.some((a) => a.userId === userId))
-          .map((e) => e.id);
-        setAttendingEventIds(attending);
       })
+      .catch(console.error);
+
+    // 2. Hämta attending IDs separat
+    const token = localStorage.getItem("token");
+    fetch(`${API_BASE}/api/Events/attending`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => res.json())
+      .then((ids) => setAttendingEventIds(ids))
       .catch(console.error);
   }, [currentMonth, currentYear, userId]);
 
@@ -102,20 +105,16 @@ export default function EventsPage() {
 
     fetch(`${API_BASE}/api/Events/${eventId}/attend`, {
       method: isAttending ? "DELETE" : "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => {
         if (res.ok) {
-          // Uppdatera attendingEventIds
           setAttendingEventIds((prev) =>
             isAttending
               ? prev.filter((id) => id !== eventId)
               : [...prev, eventId]
           );
 
-          // Uppdatera attendeeCount direkt på kortet
           setEvents((prevEvents) =>
             prevEvents.map((e) =>
               e.id === eventId

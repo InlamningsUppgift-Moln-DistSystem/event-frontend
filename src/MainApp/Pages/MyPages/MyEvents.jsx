@@ -298,7 +298,6 @@ function MyEvents() {
               src={event.imageUrl || "/placeholder.jpg"}
               alt={event.title}
             />
-            <div className="card-badge">Created</div>
             <div className="card-content">
               <h3>{event.title}</h3>
               <p>{event.location}</p>

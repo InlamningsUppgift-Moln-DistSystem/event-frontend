@@ -1,4 +1,3 @@
-// 📁 EventsPage.jsx
 import { useEffect, useState } from "react";
 import "./EventsPage.css";
 
@@ -25,8 +24,9 @@ export default function EventsPage() {
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
   const [events, setEvents] = useState([]);
-  const [attending, setAttending] = useState([]);
+  const [attendingEventIds, setAttendingEventIds] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [userId, setUserId] = useState(null);
 
   const eventsPerPage = 10;
   const totalPages = Math.ceil(events.length / eventsPerPage);
@@ -35,7 +35,25 @@ export default function EventsPage() {
     currentPage * eventsPerPage
   );
 
+  // Hämta userId
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+    fetch(
+      "https://user-service-api-fgbuhbe9dmgbb3gp.swedencentral-01.azurewebsites.net/api/user/me",
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => setUserId(data.id))
+      .catch(console.error);
+  }, []);
+
+  // Hämta events och vilka man attend:ar
+  useEffect(() => {
+    if (!userId) return;
+
     fetch(
       `${API_BASE}/api/Events/month?year=${currentYear}&month=${
         currentMonth + 1
@@ -47,16 +65,19 @@ export default function EventsPage() {
           (a, b) => new Date(a.startDate) - new Date(b.startDate)
         );
         setEvents(sorted);
+
+        const attending = sorted
+          .filter((e) => e.attendees?.some((a) => a.userId === userId))
+          .map((e) => e.id);
+        setAttendingEventIds(attending);
       })
       .catch(console.error);
-  }, [currentMonth, currentYear]);
+  }, [currentMonth, currentYear, userId]);
 
   const handleMonthChange = (direction) => {
     setCurrentPage(1);
-
     let newMonth = currentMonth + direction;
     let newYear = currentYear;
-
     if (newMonth < 0) {
       newMonth = 11;
       newYear--;
@@ -64,7 +85,6 @@ export default function EventsPage() {
       newMonth = 0;
       newYear++;
     }
-
     setCurrentMonth(newMonth);
     setCurrentYear(newYear);
   };
@@ -77,18 +97,31 @@ export default function EventsPage() {
   };
 
   const toggleAttend = (eventId) => {
-    setAttending((prev) =>
-      prev.includes(eventId)
-        ? prev.filter((id) => id !== eventId)
-        : [...prev, eventId]
-    );
+    const token = localStorage.getItem("token");
+    const isAttending = attendingEventIds.includes(eventId);
+
+    fetch(`${API_BASE}/api/Events/${eventId}/attend`, {
+      method: isAttending ? "DELETE" : "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => {
+        if (res.ok) {
+          setAttendingEventIds((prev) =>
+            isAttending
+              ? prev.filter((id) => id !== eventId)
+              : [...prev, eventId]
+          );
+        }
+      })
+      .catch(console.error);
   };
 
   const renderMonthOptions = () => {
     const options = [];
     const startYear = today.getFullYear();
     const startMonth = today.getMonth();
-
     for (let y = startYear; y <= startYear + 2; y++) {
       for (let m = 0; m < 12; m++) {
         if (y === startYear && m < startMonth) continue;
@@ -99,7 +132,6 @@ export default function EventsPage() {
         );
       }
     }
-
     return options;
   };
 
@@ -110,7 +142,7 @@ export default function EventsPage() {
           className="month-nav-left"
           onClick={() => handleMonthChange(-1)}
         >
-          &laquo;
+          <span className="arrow">&laquo;</span>
         </button>
         <select
           className="month-select"
@@ -123,13 +155,14 @@ export default function EventsPage() {
           className="month-nav-right"
           onClick={() => handleMonthChange(1)}
         >
-          &raquo;
+          <span className="arrow">&raquo;</span>
         </button>
       </header>
 
       <section className="event-grid">
         {paginatedEvents.map((event) => {
-          const isAttending = attending.includes(event.id);
+          const isAttending = attendingEventIds.includes(event.id);
+          const isOwner = event.ownerId === userId;
           return (
             <div className="event-card" key={event.id}>
               <img
@@ -137,24 +170,27 @@ export default function EventsPage() {
                 src={event.imageUrl || "/placeholder.jpg"}
                 alt={event.title}
               />
-              <div className="card-badge">Created</div>
+              {isOwner && <div className="card-badge">Created</div>}
               <div className="card-content">
                 <h3>{event.title}</h3>
                 <p>{event.location}</p>
+                <p>👥 {event.attendeeCount} attending</p>
                 <div className="card-footer">
                   <span className="event-date">
-                    🗕️ {new Date(event.startDate).toDateString()}
+                    📅 {new Date(event.startDate).toDateString()}
                   </span>
-                  <div className="attend-button-wrapper">
-                    <button
-                      className={`attend-button ${
-                        isAttending ? "attending" : ""
-                      }`}
-                      onClick={() => toggleAttend(event.id)}
-                    >
-                      {isAttending ? "Cancel" : "Attend"}
-                    </button>
-                  </div>
+                  {!isOwner && (
+                    <div className="attend-button-wrapper">
+                      <button
+                        className={`attend-button ${
+                          isAttending ? "attending" : ""
+                        }`}
+                        onClick={() => toggleAttend(event.id)}
+                      >
+                        {isAttending ? "Unattend" : "Attend"}
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

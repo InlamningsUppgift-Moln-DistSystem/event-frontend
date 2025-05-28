@@ -90,7 +90,7 @@ function Topbar() {
       </div>
 
       <nav className="header-controls" ref={dropdownRef}>
-        <div className="dropdown-wrapper">
+        {/* <div className="dropdown-wrapper">
           <button
             className="control-button"
             aria-label="Notifications"
@@ -120,7 +120,7 @@ function Topbar() {
               </div>
             )}
           </button>
-        </div>
+        </div> */}
 
         <div className="dropdown-wrapper">
           <button
@@ -132,10 +132,10 @@ function Topbar() {
             {openMenu === "settings" && (
               <div className="dropdown-menu settings">
                 <h4>Settings</h4>
-                <label className="toggle-option">
+                {/* <label className="toggle-option">
                   <input type="checkbox" /> Dark Mode:{" "}
                   <span className="status-off">Off</span>
-                </label>
+                </label> */}
                 <button className="settings-button gdpr-button">
                   GDPR Settings
                 </button>

@@ -1,23 +1,50 @@
-// AttendingPage.jsx
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./AttendingPage.css";
 
-const attendingEvents = Array.from({ length: 16 }, (_, i) => ({
-  id: i + 1,
-  title: `Attending Event ${i + 1}`,
-  location: "City Center Hall, Example City",
-  date: new Date(2029, 6, (i % 28) + 1),
-}));
+const API_BASE =
+  "https://eventservice-api-cebndaaheydrfbcs.swedencentral-01.azurewebsites.net";
 
 export default function AttendingPage() {
+  const [events, setEvents] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const eventsPerPage = 10;
-  const totalPages = Math.ceil(attendingEvents.length / eventsPerPage);
+  const totalPages = Math.ceil(events.length / eventsPerPage);
 
-  const paginatedEvents = attendingEvents.slice(
+  const paginatedEvents = events.slice(
     (currentPage - 1) * eventsPerPage,
     currentPage * eventsPerPage
   );
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    fetch(`${API_BASE}/api/events/attending`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        const sorted = data.sort(
+          (a, b) => new Date(a.startDate) - new Date(b.startDate)
+        );
+        setEvents(sorted);
+      })
+      .catch(console.error);
+  }, []);
+
+  const handleUnattend = (eventId) => {
+    const token = localStorage.getItem("token");
+    fetch(`${API_BASE}/api/events/${eventId}/attend`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => {
+        if (res.ok) {
+          setEvents((prev) => prev.filter((e) => e.id !== eventId));
+        }
+      })
+      .catch(console.error);
+  };
 
   return (
     <div className="attending-page">
@@ -26,16 +53,26 @@ export default function AttendingPage() {
       <section className="attending-grid">
         {paginatedEvents.map((event) => (
           <div className="event-card" key={event.id}>
-            <div className="event-image-placeholder" />
+            <img
+              className="event-image"
+              src={event.imageUrl || "/placeholder.jpg"}
+              alt={event.title}
+            />
             <div className="card-badge">Attending</div>
             <div className="card-content">
               <h3>{event.title}</h3>
               <p>{event.location}</p>
+              <p>👥 {event.attendeeCount} attending</p>
               <div className="card-footer">
                 <span className="event-date">
-                  📅 {event.date.toDateString()}
+                  📅 {new Date(event.startDate).toDateString()}
                 </span>
-                <button className="cancel-button">Cancel</button>
+                <button
+                  className="cancel-button"
+                  onClick={() => handleUnattend(event.id)}
+                >
+                  Unattend
+                </button>
               </div>
             </div>
           </div>

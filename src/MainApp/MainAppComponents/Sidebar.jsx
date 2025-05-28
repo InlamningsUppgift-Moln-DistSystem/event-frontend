@@ -6,7 +6,7 @@ function Sidebar({ openGdprModal }) {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [notificationOpen, setNotificationOpen] = useState(false);
+  // const [notificationOpen, setNotificationOpen] = useState(false);
 
   const isActive = (path) => pathname.startsWith(`/app/${path}`);
 
@@ -32,7 +32,7 @@ function Sidebar({ openGdprModal }) {
         <button
           className="notification-button"
           onClick={() => {
-            setNotificationOpen((prev) => !prev);
+            // setNotificationOpen((prev) => !prev);
             setMenuOpen(false);
           }}
         >
@@ -43,7 +43,7 @@ function Sidebar({ openGdprModal }) {
           className="hamburger-button"
           onClick={() => {
             setMenuOpen((prev) => !prev);
-            setNotificationOpen(false);
+            // setNotificationOpen(false);
           }}
         >
           ☰
@@ -154,7 +154,7 @@ function Sidebar({ openGdprModal }) {
         </div>
       )}
 
-      {notificationOpen && (
+      {/* {notificationOpen && (
         <div className="mobile-notification-dropdown">
           <h4>Notifications</h4>
           <ul>
@@ -169,7 +169,7 @@ function Sidebar({ openGdprModal }) {
             </li>
           </ul>
         </div>
-      )}
+      )} */}
     </aside>
   );
 }

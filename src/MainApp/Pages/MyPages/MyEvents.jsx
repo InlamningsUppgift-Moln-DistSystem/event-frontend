@@ -44,6 +44,7 @@ function MyEvents() {
     if (!form.title.trim()) newErrors.title = "Title is required.";
     if (!form.location.trim()) newErrors.location = "Location is required.";
     if (!form.date) newErrors.date = "Date is required.";
+    if (!form.image) newErrors.image = "Image is required.";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -165,30 +166,34 @@ function MyEvents() {
   };
 
   const ImageUploadBox = () => (
-    <div
-      className="image-upload-box"
-      onClick={() => document.getElementById("imageInput").click()}
-    >
-      {previewUrl ? (
-        <img src={previewUrl} alt="Preview" className="image-preview" />
-      ) : (
-        <div className="placeholder-box">
-          <div className="plus-sign">+</div>
-          <div className="add-text">Add Picture</div>
-        </div>
-      )}
-      <input
-        id="imageInput"
-        type="file"
-        accept="image/*"
-        style={{ display: "none" }}
-        onChange={(e) => {
-          const file = e.target.files[0];
-          setForm({ ...form, image: file });
-          setPreviewUrl(URL.createObjectURL(file));
-        }}
-      />
-    </div>
+    <>
+      <div
+        className={`image-upload-box ${errors.image ? "error" : ""}`}
+        onClick={() => document.getElementById("imageInput").click()}
+      >
+        {previewUrl ? (
+          <img src={previewUrl} alt="Preview" className="image-preview" />
+        ) : (
+          <div className="placeholder-box">
+            <div className="plus-sign">+</div>
+            <div className="add-text">Add Picture</div>
+          </div>
+        )}
+        <input
+          id="imageInput"
+          type="file"
+          accept="image/*"
+          style={{ display: "none" }}
+          onChange={(e) => {
+            const file = e.target.files[0];
+            setForm({ ...form, image: file });
+            setPreviewUrl(URL.createObjectURL(file));
+            setErrors({ ...errors, image: undefined }); // clear image error
+          }}
+        />
+      </div>
+      {errors.image && <span className="error-message">{errors.image}</span>}
+    </>
   );
 
   const renderFormFields = (isEdit = false, onSubmit) => (

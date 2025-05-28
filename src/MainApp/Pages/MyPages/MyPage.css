@@ -248,3 +248,19 @@ button[disabled] {
     transform: rotate(360deg);
   }
 }
+@media (max-width: 480px) {
+  .form-actions {
+    flex-wrap: nowrap;
+    flex-direction: row;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .profile-form button {
+    padding: 10px;
+    font-size: 13px;
+    min-width: auto;
+    width: 100%;
+    max-width: 120px;
+  }
+}

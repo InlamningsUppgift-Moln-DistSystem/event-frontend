@@ -18,11 +18,11 @@ function Footer() {
             </a>
           </nav>
         </div>
-        <div className="social-links">
+        {/* <div className="social-links">
           <a href="#" className="social-link">
             🔗
           </a>
-        </div>
+        </div> */}
       </div>
     </footer>
   );

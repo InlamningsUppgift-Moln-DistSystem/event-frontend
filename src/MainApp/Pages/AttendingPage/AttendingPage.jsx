@@ -8,7 +8,6 @@ export default function AttendingPage() {
   const [events, setEvents] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const eventsPerPage = 10;
-  const totalPages = Math.ceil(events.length / eventsPerPage);
 
   const paginatedEvents = events.slice(
     (currentPage - 1) * eventsPerPage,
@@ -22,7 +21,10 @@ export default function AttendingPage() {
     fetch(`${API_BASE}/api/events/my-attending`, {
       headers: { Authorization: `Bearer ${token}` },
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch attending events.");
+        return res.json();
+      })
       .then((data) => {
         const sorted = data.sort(
           (a, b) => new Date(a.startDate) - new Date(b.startDate)
@@ -45,6 +47,8 @@ export default function AttendingPage() {
       })
       .catch(console.error);
   };
+
+  const totalPages = Math.ceil(events.length / eventsPerPage);
 
   return (
     <div className="attending-page">

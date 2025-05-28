@@ -1,20 +1,17 @@
 import "./MyEvents.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+const API_BASE =
+  "https://eventservice-api-cebndaaheydrfbcs.swedencentral-01.azurewebsites.net";
 
 function MyEvents() {
-  const [events, setEvents] = useState(
-    Array.from({ length: 14 }, (_, i) => ({
-      id: i + 1,
-      title: `My Event ${i + 1}`,
-      location: "Your Venue, Your City",
-      date: new Date(2029, 8, (i % 28) + 1),
-      attendeeCount: 1,
-    }))
-  );
+  const [events, setEvents] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [form, setForm] = useState({ title: "", location: "", date: "" });
 
+  const token = localStorage.getItem("token");
   const eventsPerPage = 10;
   const totalPages = Math.ceil(events.length / eventsPerPage);
   const paginatedEvents = events.slice(
@@ -22,28 +19,63 @@ function MyEvents() {
     currentPage * eventsPerPage
   );
 
-  const [form, setForm] = useState({
-    title: "",
-    location: "",
-    date: "",
-  });
+  useEffect(() => {
+    if (token) {
+      fetch(`${API_BASE}/api/Events/mine`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then((res) => res.json())
+        .then(setEvents)
+        .catch(console.error);
+    }
+  }, []);
 
-  const handleCreateEvent = (e) => {
+  const handleCreateEvent = async (e) => {
     e.preventDefault();
-    const newEvent = {
-      id: Date.now(),
-      title: form.title,
-      location: form.location,
-      date: new Date(form.date),
-      attendeeCount: 1,
-    };
-    setEvents([newEvent, ...events]);
-    setForm({ title: "", location: "", date: "" });
-    setShowCreateModal(false);
+    try {
+      const res = await fetch(`${API_BASE}/api/Events`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          title: form.title,
+          location: form.location,
+          startDate: form.date,
+        }),
+      });
+      const newEvent = await res.json();
+      setEvents([newEvent, ...events]);
+      setShowCreateModal(false);
+      setForm({ title: "", location: "", date: "" });
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  const handleDelete = (id) => {
-    setEvents(events.filter((e) => e.id !== id));
+  const handleDelete = async (id) => {
+    try {
+      await fetch(`${API_BASE}/api/Events/${id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setEvents(events.filter((e) => e.id !== id));
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleSelectEvent = async (id) => {
+    try {
+      const res = await fetch(`${API_BASE}/api/Events/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      setSelectedEvent(data);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
@@ -62,7 +94,7 @@ function MyEvents() {
           <div
             className="event-card"
             key={event.id}
-            onClick={() => setSelectedEvent(event)}
+            onClick={() => handleSelectEvent(event.id)}
           >
             <div className="event-image-placeholder" />
             <div className="card-badge">Created</div>
@@ -72,7 +104,7 @@ function MyEvents() {
               <p>👥 {event.attendeeCount} attending</p>
               <div className="card-footer">
                 <span className="event-date">
-                  📅 {event.date.toDateString()}
+                  📅 {new Date(event.startDate).toDateString()}
                 </span>
                 <button
                   className="delete-button"
@@ -160,7 +192,8 @@ function MyEvents() {
               <strong>Location:</strong> {selectedEvent.location}
             </p>
             <p>
-              <strong>Date:</strong> {selectedEvent.date.toDateString()}
+              <strong>Date:</strong>{" "}
+              {new Date(selectedEvent.startDate).toDateString()}
             </p>
             <p>
               <strong>Attendees:</strong> {selectedEvent.attendeeCount}

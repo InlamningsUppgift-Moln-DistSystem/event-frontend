@@ -46,12 +46,19 @@ function ImageUploadForm({ imageUrl, onClose }) {
         body: formData,
       });
 
-      if (!res.ok) throw new Error("Upload failed");
+      if (!res.ok) {
+        const data = await res.json().catch(() => null); // ifall svaret inte är JSON
+        const message =
+          data?.error ||
+          data?.message ||
+          `Upload failed with status ${res.status}`;
+        throw new Error(message);
+      }
 
       onClose();
     } catch (err) {
       console.error("Upload error:", err);
-      setError("Upload failed. Please try again.");
+      setError(err.message || "Upload failed. Please try again.");
     }
 
     setLoading(false);

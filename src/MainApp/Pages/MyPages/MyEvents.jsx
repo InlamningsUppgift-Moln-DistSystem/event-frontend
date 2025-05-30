@@ -294,7 +294,7 @@ function MyEvents() {
         {paginatedEvents.length === 0 ? (
           <div className="no-events-message">
             <h2>You haven't created any events yet.</h2>
-            <p>Click the pink “+ Add New Event” button to get started.</p>
+            <p>Click the “+ Add New Event” button to get started.</p>
           </div>
         ) : (
           paginatedEvents.map((event) => (

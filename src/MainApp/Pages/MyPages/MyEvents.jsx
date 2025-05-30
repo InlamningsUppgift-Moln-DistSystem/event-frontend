@@ -291,37 +291,44 @@ function MyEvents() {
       </div>
 
       <section className="my-events-grid">
-        {paginatedEvents.map((event) => (
-          <div className="event-card" key={event.id}>
-            <img
-              className="event-image"
-              src={event.imageUrl || "/placeholder.jpg"}
-              alt={event.title}
-            />
-            <div className="card-content">
-              <h3>{event.title}</h3>
-              <p>{event.location}</p>
-              <p>👥 {event.attendeeCount} attending</p>
-              <div className="card-footer">
-                <span className="event-date">
-                  📅 {new Date(event.startDate).toDateString()}
-                </span>
-                <button
-                  className="edit-button"
-                  onClick={() => openEditModal(event)}
-                >
-                  Edit
-                </button>
-                <button
-                  className="delete-button"
-                  onClick={() => handleDelete(event.id)}
-                >
-                  Delete
-                </button>
+        {paginatedEvents.length === 0 ? (
+          <div className="no-events-message">
+            <h2>You haven't created any events yet.</h2>
+            <p>Click the pink “+ Add New Event” button to get started.</p>
+          </div>
+        ) : (
+          paginatedEvents.map((event) => (
+            <div className="event-card" key={event.id}>
+              <img
+                className="event-image"
+                src={event.imageUrl || "/placeholder.jpg"}
+                alt={event.title}
+              />
+              <div className="card-content">
+                <h3>{event.title}</h3>
+                <p>{event.location}</p>
+                <p>👥 {event.attendeeCount} attending</p>
+                <div className="card-footer">
+                  <span className="event-date">
+                    📅 {new Date(event.startDate).toDateString()}
+                  </span>
+                  <button
+                    className="edit-button"
+                    onClick={() => openEditModal(event)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="delete-button"
+                    onClick={() => handleDelete(event.id)}
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </section>
 
       {totalPages > 1 && (

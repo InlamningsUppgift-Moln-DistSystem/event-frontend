@@ -53,32 +53,39 @@ export default function AttendingPage() {
   return (
     <div className="attending-page">
       <section className="attending-grid">
-        {paginatedEvents.map((event) => (
-          <div className="event-card" key={event.id}>
-            <img
-              className="event-image"
-              src={event.imageUrl || "/placeholder.jpg"}
-              alt={event.title}
-            />
-            <div className="card-badge">Attending</div>
-            <div className="card-content">
-              <h3>{event.title}</h3>
-              <p>{event.location}</p>
-              <p>👥 {event.attendeeCount} attending</p>
-              <div className="card-footer">
-                <span className="event-date">
-                  📅 {new Date(event.startDate).toDateString()}
-                </span>
-                <button
-                  className="cancel-button"
-                  onClick={() => handleUnattend(event.id)}
-                >
-                  Unattend
-                </button>
+        {paginatedEvents.length === 0 ? (
+          <div className="no-events-message">
+            <h2>You're not attending any events yet.</h2>
+            <p>Find something interesting on the Events page and join in!</p>
+          </div>
+        ) : (
+          paginatedEvents.map((event) => (
+            <div className="event-card" key={event.id}>
+              <img
+                className="event-image"
+                src={event.imageUrl || "/placeholder.jpg"}
+                alt={event.title}
+              />
+              <div className="card-badge">Attending</div>
+              <div className="card-content">
+                <h3>{event.title}</h3>
+                <p>{event.location}</p>
+                <p>👥 {event.attendeeCount} attending</p>
+                <div className="card-footer">
+                  <span className="event-date">
+                    📅 {new Date(event.startDate).toDateString()}
+                  </span>
+                  <button
+                    className="cancel-button"
+                    onClick={() => handleUnattend(event.id)}
+                  >
+                    Unattend
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </section>
 
       {totalPages > 1 && (

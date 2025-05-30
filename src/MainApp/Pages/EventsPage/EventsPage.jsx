@@ -174,42 +174,52 @@ export default function EventsPage() {
       </header>
 
       <section className="event-grid">
-        {paginatedEvents.map((event) => {
-          const isAttending = attendingEventIds.includes(event.id);
-          const isOwner = event.ownerId === userId;
-          return (
-            <div className="event-card" key={event.id}>
-              <img
-                className="event-image"
-                src={event.imageUrl || "/placeholder.jpg"}
-                alt={event.title}
-              />
-              {isOwner && <div className="card-badge">Created</div>}
-              <div className="card-content">
-                <h3>{event.title}</h3>
-                <p>{event.location}</p>
-                <p>👥 {event.attendeeCount} attending</p>
-                <div className="card-footer">
-                  <span className="event-date">
-                    📅 {new Date(event.startDate).toDateString()}
-                  </span>
-                  {!isOwner && (
-                    <div className="attend-button-wrapper">
-                      <button
-                        className={`attend-button ${
-                          isAttending ? "attending" : ""
-                        }`}
-                        onClick={() => toggleAttend(event.id)}
-                      >
-                        {isAttending ? "Unattend" : "Attend"}
-                      </button>
-                    </div>
-                  )}
+        {paginatedEvents.length === 0 ? (
+          <div className="no-events-message">
+            <h2>
+              There are currently no events in {monthNames[currentMonth]}{" "}
+              {currentYear}.
+            </h2>
+            <p>But you could be the first to create one!</p>
+          </div>
+        ) : (
+          paginatedEvents.map((event) => {
+            const isAttending = attendingEventIds.includes(event.id);
+            const isOwner = event.ownerId === userId;
+            return (
+              <div className="event-card" key={event.id}>
+                <img
+                  className="event-image"
+                  src={event.imageUrl || "/placeholder.jpg"}
+                  alt={event.title}
+                />
+                {isOwner && <div className="card-badge">Created</div>}
+                <div className="card-content">
+                  <h3>{event.title}</h3>
+                  <p>{event.location}</p>
+                  <p>👥 {event.attendeeCount} attending</p>
+                  <div className="card-footer">
+                    <span className="event-date">
+                      📅 {new Date(event.startDate).toDateString()}
+                    </span>
+                    {!isOwner && (
+                      <div className="attend-button-wrapper">
+                        <button
+                          className={`attend-button ${
+                            isAttending ? "attending" : ""
+                          }`}
+                          onClick={() => toggleAttend(event.id)}
+                        >
+                          {isAttending ? "Unattend" : "Attend"}
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })
+        )}
       </section>
 
       {totalPages > 1 && (

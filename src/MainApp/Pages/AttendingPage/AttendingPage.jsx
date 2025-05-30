@@ -7,6 +7,8 @@ const API_BASE =
 export default function AttendingPage() {
   const [events, setEvents] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(true);
+
   const eventsPerPage = 10;
 
   const paginatedEvents = events.slice(
@@ -31,7 +33,8 @@ export default function AttendingPage() {
         );
         setEvents(sorted);
       })
-      .catch(console.error);
+      .catch(console.error)
+      .finally(() => setLoading(false)); // 👈 lägg till detta
   }, []);
 
   const handleUnattend = (eventId) => {
@@ -53,7 +56,11 @@ export default function AttendingPage() {
   return (
     <div className="attending-page">
       <section className="attending-grid">
-        {paginatedEvents.length === 0 ? (
+        {loading ? (
+          <div className="spinner-wrapper">
+            <div className="spinner" />
+          </div>
+        ) : paginatedEvents.length === 0 ? (
           <div className="no-events-message">
             <h2>You're not attending any events yet.</h2>
             <p>Find something interesting on the Events page and join in!</p>

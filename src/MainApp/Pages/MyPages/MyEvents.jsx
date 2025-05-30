@@ -10,6 +10,7 @@ function MyEvents() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [form, setForm] = useState({
     title: "",
     location: "",
@@ -34,8 +35,14 @@ function MyEvents() {
         headers: { Authorization: `Bearer ${token}` },
       })
         .then((res) => res.json())
-        .then(setEvents)
-        .catch(console.error);
+        .then((data) => {
+          setEvents(data);
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.error(err);
+          setLoading(false);
+        });
     }
   }, []);
 
@@ -291,7 +298,11 @@ function MyEvents() {
       </div>
 
       <section className="my-events-grid">
-        {paginatedEvents.length === 0 ? (
+        {loading ? (
+          <div className="spinner-wrapper">
+            <div className="spinner" />
+          </div>
+        ) : paginatedEvents.length === 0 ? (
           <div className="no-events-message">
             <h2>You haven't created any events yet.</h2>
             <p>Click the “+ Add New Event” button to get started.</p>

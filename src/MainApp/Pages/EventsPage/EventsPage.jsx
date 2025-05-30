@@ -21,12 +21,21 @@ const monthNames = [
 
 export default function EventsPage() {
   const today = new Date();
-  const [currentMonth, setCurrentMonth] = useState(today.getMonth());
-  const [currentYear, setCurrentYear] = useState(today.getFullYear());
+  const [currentMonth, setCurrentMonth] = useState(() => {
+    const saved = localStorage.getItem("events_currentMonth");
+    return saved !== null ? parseInt(saved) : today.getMonth();
+  });
+
+  const [currentYear, setCurrentYear] = useState(() => {
+    const saved = localStorage.getItem("events_currentYear");
+    return saved !== null ? parseInt(saved) : today.getFullYear();
+  });
+
   const [events, setEvents] = useState([]);
   const [attendingEventIds, setAttendingEventIds] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [userId, setUserId] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const eventsPerPage = 10;
   const totalPages = Math.ceil(events.length / eventsPerPage);
@@ -36,24 +45,11 @@ export default function EventsPage() {
   );
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) return;
-    fetch(
-      "https://user-service-api-fgbuhbe9dmgbb3gp.swedencentral-01.azurewebsites.net/api/user/me",
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    )
-      .then((res) => res.json())
-      .then((data) => setUserId(data.id))
-      .catch(console.error);
-  }, []);
-
-  useEffect(() => {
     if (!userId) return;
 
-    // 1. Hämta events
-    fetch(
+    const token = localStorage.getItem("token");
+
+    const fetchEvents = fetch(
       `${API_BASE}/api/Events/month?year=${currentYear}&month=${
         currentMonth + 1
       }`
@@ -64,17 +60,17 @@ export default function EventsPage() {
           (a, b) => new Date(a.startDate) - new Date(b.startDate)
         );
         setEvents(sorted);
-      })
-      .catch(console.error);
+      });
 
-    // 2. Hämta attending IDs separat
-    const token = localStorage.getItem("token");
-    fetch(`${API_BASE}/api/Events/attending`, {
+    const fetchAttending = fetch(`${API_BASE}/api/Events/attending`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
-      .then((ids) => setAttendingEventIds(ids))
-      .catch(console.error);
+      .then((ids) => setAttendingEventIds(ids));
+
+    Promise.all([fetchEvents, fetchAttending])
+      .catch(console.error)
+      .finally(() => setLoading(false));
   }, [currentMonth, currentYear, userId]);
 
   const handleMonthChange = (direction) => {
@@ -91,6 +87,23 @@ export default function EventsPage() {
     setCurrentMonth(newMonth);
     setCurrentYear(newYear);
   };
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+    fetch(
+      "https://user-service-api-fgbuhbe9dmgbb3gp.swedencentral-01.azurewebsites.net/api/user/me",
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => setUserId(data.id))
+      .catch(console.error);
+  }, []);
+  useEffect(() => {
+    localStorage.setItem("events_currentMonth", currentMonth);
+    localStorage.setItem("events_currentYear", currentYear);
+  }, [currentMonth, currentYear]);
 
   const handleMonthSelect = (e) => {
     const [year, month] = e.target.value.split("-").map(Number);
@@ -174,7 +187,11 @@ export default function EventsPage() {
       </header>
 
       <section className="event-grid">
-        {paginatedEvents.length === 0 ? (
+        {loading ? (
+          <div className="spinner-wrapper">
+            <div className="spinner" />
+          </div>
+        ) : paginatedEvents.length === 0 ? (
           <div className="no-events-message">
             <h2>
               There are currently no events in {monthNames[currentMonth]}{" "}

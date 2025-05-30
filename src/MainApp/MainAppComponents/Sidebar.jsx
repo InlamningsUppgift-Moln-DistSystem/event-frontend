@@ -51,11 +51,12 @@ function Sidebar({ openGdprModal }) {
       </div>
 
       <nav className="main-nav">
+        <h4 className="nav-section-title">Public Events</h4>
         <a
           onClick={() => navigate("/app/events")}
           className={`nav-item ${isActive("events") ? "active" : ""}`}
         >
-          📅 <span>Events</span>
+          📅 <span>Browse</span>
           <span className="active-indicator"></span>
         </a>
 
@@ -63,12 +64,19 @@ function Sidebar({ openGdprModal }) {
           onClick={() => navigate("/app/attending")}
           className={`nav-item ${isActive("attending") ? "active" : ""}`}
         >
-          👥 <span>Attending</span>
+          👥 <span>Joined</span>
           <span className="active-indicator"></span>
         </a>
       </nav>
 
       <div className="sidebar-footer">
+        <button
+          className="sidebar-create-event"
+          onClick={() => navigate("/app/myevents")}
+        >
+          Create Event
+        </button>
+
         <button className="signout-button" onClick={handleSignOut}>
           Sign Out
         </button>
@@ -80,14 +88,14 @@ function Sidebar({ openGdprModal }) {
       {menuOpen && (
         <div className="mobile-dropdown">
           <div className="dropdown-section nav-links">
-            <h4 className="dropdown-title">Main Pages</h4>
+            <h4 className="dropdown-title">Public Events</h4>
             <button
               onClick={() => {
                 navigate("/app/events");
                 setMenuOpen(false);
               }}
             >
-              Events
+              Browse
             </button>
             <button
               onClick={() => {
@@ -95,7 +103,7 @@ function Sidebar({ openGdprModal }) {
                 setMenuOpen(false);
               }}
             >
-              Attending
+              Joined
             </button>
           </div>
           <hr />
@@ -120,7 +128,7 @@ function Sidebar({ openGdprModal }) {
                 setMenuOpen(false);
               }}
             >
-              My Events
+              My Events (Your own)
             </button>
             <button
               onClick={() => {

@@ -394,3 +394,51 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
+.nav-section-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #888;
+  text-transform: uppercase;
+  margin: 12px 0 4px 24px;
+}
+.sidebar-create-event {
+  background-color: #ff5fa2;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  width: 100%;
+}
+
+.sidebar-create-event:hover {
+  background-color: #e84e8f;
+}
+@media (max-width: 1024px) {
+  .sidebar-create-event {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    padding: 0;
+    font-size: 0; /* Dölj texten */
+    background-color: #ff5fa2;
+    position: relative;
+  }
+
+  .sidebar-create-event::before {
+    content: "+";
+    font-size: 24px;
+    color: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .nav-section-title {
+    display: none;
+  }
+}

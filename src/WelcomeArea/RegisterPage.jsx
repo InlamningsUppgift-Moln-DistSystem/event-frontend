@@ -1,7 +1,7 @@
 // RegisterPage with retry confirmation email + full validation
 import { useNavigate } from "react-router-dom";
 import "./RegisterPage.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 function RegisterPage() {
@@ -19,6 +19,14 @@ function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const [resending, setResending] = useState(false);
   const [resendMessage, setResendMessage] = useState("");
+
+  useEffect(() => {
+    fetch(
+      "https://emailservice-api-e4c5b9cnfxehg6h8.swedencentral-01.azurewebsites.net/api/Health/servicebus"
+    )
+      .then(() => console.log("✅ EmailService pinged via /health/servicebus"))
+      .catch((err) => console.error("❌ Failed to ping EmailService:", err));
+  }, []);
 
   const validate = () => {
     const newErrors = {};

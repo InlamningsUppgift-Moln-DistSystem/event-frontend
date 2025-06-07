@@ -78,7 +78,7 @@ function Sidebar({ openGdprModal }) {
         </button>
 
         <button className="signout-button" onClick={handleSignOut}>
-          Sign Out
+          Log Out
         </button>
         <button className="signout-icon-button" onClick={handleSignOut}>
           ⎋

@@ -1,6 +1,9 @@
 import "./TermsAndConditionsPage.css";
+import { useNavigate } from "react-router-dom";
 
 export default function TermsAndConditionPage() {
+  const navigate = useNavigate();
+
   return (
     <div className="terms-page">
       <div className="terms-container">
@@ -61,6 +64,11 @@ export default function TermsAndConditionPage() {
           For questions or concerns about these terms, please contact us via our
           contact page.
         </p>
+        <div className="back-button-container">
+          <button className="back-button" onClick={() => navigate(-1)}>
+            Back
+          </button>
+        </div>
       </div>
     </div>
   );

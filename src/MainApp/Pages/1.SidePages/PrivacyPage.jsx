@@ -1,6 +1,9 @@
 import "./PrivacyPage.css";
+import { useNavigate } from "react-router-dom";
 
 export default function PrivacyPage() {
+  const navigate = useNavigate();
+
   return (
     <div className="privacy-page">
       <div className="privacy-container">
@@ -46,6 +49,11 @@ export default function PrivacyPage() {
           For any questions regarding this policy, feel free to contact us via
           our contact page.
         </p>
+        <div className="back-button-container">
+          <button className="back-button" onClick={() => navigate(-1)}>
+            Back
+          </button>
+        </div>
       </div>
     </div>
   );

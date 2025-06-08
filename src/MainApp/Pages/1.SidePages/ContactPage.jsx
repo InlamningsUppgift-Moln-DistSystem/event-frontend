@@ -1,9 +1,12 @@
 import { useState } from "react";
 import "./ContactPage.css";
+import { useNavigate } from "react-router-dom";
+import { FaArrowLeft } from "react-icons/fa";
 
 export default function ContactPage() {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [status, setStatus] = useState(null);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -38,6 +41,9 @@ export default function ContactPage() {
   return (
     <div className="contact-page">
       <div className="contact-container">
+        <button className="back-button top-right" onClick={() => navigate(-1)}>
+          <FaArrowLeft />
+        </button>
         <h2 className="contact-title">Contact Us</h2>
         <p className="contact-subtitle">We’d love to hear from you.</p>
 

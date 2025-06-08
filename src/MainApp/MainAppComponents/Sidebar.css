@@ -442,3 +442,33 @@
     display: none;
   }
 }
+.mobile-create-event-button {
+  background-color: #ff4da6 !important;
+  color: white !important;
+  font-weight: 600 !important;
+  padding: 10px 16px !important;
+  border: 1px solid black !important;
+  border-radius: 16px !important;
+  width: 100% !important;
+  margin-top: 16px !important;
+  transition: background 0.2s ease !important;
+}
+
+.mobile-create-event-button:hover {
+  background-color: #e04090;
+}
+.mobile-logout-button {
+  background-color: #f3f3ff !important;
+  color: #111 !important;
+  font-weight: 600 !important;
+  padding: 10px 16px !important;
+  border: 1px solid black !important;
+  border-radius: 16px !important;
+  width: 100%;
+  margin-top: 0px !important;
+  transition: background 0.2s ease !important;
+}
+
+.mobile-logout-button:hover {
+  background-color: #e4e4f0;
+}

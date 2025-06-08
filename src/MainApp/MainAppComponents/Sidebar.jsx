@@ -115,9 +115,20 @@ function Sidebar({ openGdprModal }) {
                 setMenuOpen(false);
               }}
             >
-              My Events (Your own)
+              My Events
             </button>
             <button
+              className="mobile-create-event-button"
+              onClick={() => {
+                navigate("/app/myevents");
+                setMenuOpen(false);
+              }}
+            >
+              Create Event
+            </button>
+
+            <button
+              className="mobile-logout-button"
               onClick={() => {
                 setMenuOpen(false);
                 handleSignOut();

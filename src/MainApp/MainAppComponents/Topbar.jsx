@@ -1,6 +1,7 @@
 import "./Topbar.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
+import ConfirmModal from "../../SiteComponents/ConfirmModal";
 
 function Topbar({ openGdprModal }) {
   const { pathname } = useLocation();
@@ -8,6 +9,7 @@ function Topbar({ openGdprModal }) {
   const [openMenu, setOpenMenu] = useState(null);
   const dropdownRef = useRef(null);
   const [user, setUser] = useState(null);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -153,11 +155,8 @@ function Topbar({ openGdprModal }) {
               </button>
               <button
                 onClick={() => {
-                  localStorage.removeItem("token");
-                  localStorage.removeItem("username");
-                  localStorage.removeItem("initials");
                   setOpenMenu(null);
-                  window.location.href = "/";
+                  setShowLogoutConfirm(true);
                 }}
               >
                 Logout
@@ -166,6 +165,19 @@ function Topbar({ openGdprModal }) {
           )}
         </div>
       </nav>
+      {showLogoutConfirm && (
+        <ConfirmModal
+          title="Are you sure?"
+          message="Do you really want to log out?"
+          onConfirm={() => {
+            localStorage.removeItem("token");
+            localStorage.removeItem("username");
+            localStorage.removeItem("initials");
+            window.location.href = "/";
+          }}
+          onCancel={() => setShowLogoutConfirm(false)}
+        />
+      )}
     </header>
   );
 }

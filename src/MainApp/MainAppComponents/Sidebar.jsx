@@ -1,20 +1,18 @@
 import "./Sidebar.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
+import ConfirmModal from "../../SiteComponents/ConfirmModal";
 
 function Sidebar({ openGdprModal }) {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
-  // const [notificationOpen, setNotificationOpen] = useState(false);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false); // ✅ NY
 
   const isActive = (path) => pathname.startsWith(`/app/${path}`);
 
   const handleSignOut = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("username");
-    localStorage.removeItem("initials");
-    window.location.href = "/";
+    setShowLogoutConfirm(true); // ✅ Visa modal istället för direkt logout
   };
 
   return (
@@ -29,21 +27,10 @@ function Sidebar({ openGdprModal }) {
       </div>
 
       <div className="mobile-actions">
-        {/* <button
-          className="notification-button"
-          onClick={() => {
-            // setNotificationOpen((prev) => !prev);
-            setMenuOpen(false);
-          }}
-        >
-          🔔
-        </button> */}
-
         <button
           className="hamburger-button"
           onClick={() => {
             setMenuOpen((prev) => !prev);
-            // setNotificationOpen(false);
           }}
         >
           ☰
@@ -132,8 +119,8 @@ function Sidebar({ openGdprModal }) {
             </button>
             <button
               onClick={() => {
-                handleSignOut();
                 setMenuOpen(false);
+                handleSignOut();
               }}
             >
               Logout
@@ -142,14 +129,6 @@ function Sidebar({ openGdprModal }) {
           <hr />
           <div className="dropdown-section nav-links">
             <h4 className="dropdown-title">Settings</h4>
-            {/* <button
-              onClick={() => {
-                // placeholder for dark mode toggle
-                setMenuOpen(false);
-              }}
-            >
-              Dark Mode: <span className="status-off">Off</span>
-            </button> */}
             <button
               onClick={() => {
                 openGdprModal();
@@ -162,22 +141,20 @@ function Sidebar({ openGdprModal }) {
         </div>
       )}
 
-      {/* {notificationOpen && (
-        <div className="mobile-notification-dropdown">
-          <h4>Notifications</h4>
-          <ul>
-            <li className="event">
-              <span>New event published</span>
-            </li>
-            <li className="follower">
-              <span>Alice followed you</span>
-            </li>
-            <li className="maintenance">
-              <span>Maintenance tomorrow</span>
-            </li>
-          </ul>
-        </div>
-      )} */}
+      {/* ✅ LOGOUT MODAL */}
+      {showLogoutConfirm && (
+        <ConfirmModal
+          title="Are you sure?"
+          message="Do you really want to log out?"
+          onConfirm={() => {
+            localStorage.removeItem("token");
+            localStorage.removeItem("username");
+            localStorage.removeItem("initials");
+            window.location.href = "/";
+          }}
+          onCancel={() => setShowLogoutConfirm(false)}
+        />
+      )}
     </aside>
   );
 }

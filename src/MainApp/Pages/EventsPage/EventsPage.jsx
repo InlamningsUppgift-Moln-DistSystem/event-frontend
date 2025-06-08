@@ -21,6 +21,9 @@ const monthNames = [
 
 export default function EventsPage() {
   const today = new Date();
+  const maxYear = today.getFullYear() + 2;
+  const maxMonth = 11; // December
+
   const [currentMonth, setCurrentMonth] = useState(() => {
     const saved = localStorage.getItem("events_currentMonth");
     return saved !== null ? parseInt(saved) : today.getMonth();
@@ -75,8 +78,22 @@ export default function EventsPage() {
 
   const handleMonthChange = (direction) => {
     setCurrentPage(1);
+
+    if (direction === -1) {
+      if (
+        currentYear === today.getFullYear() &&
+        currentMonth === today.getMonth()
+      )
+        return;
+    }
+
+    if (direction === 1) {
+      if (currentYear === maxYear && currentMonth === maxMonth) return;
+    }
+
     let newMonth = currentMonth + direction;
     let newYear = currentYear;
+
     if (newMonth < 0) {
       newMonth = 11;
       newYear--;
@@ -84,9 +101,11 @@ export default function EventsPage() {
       newMonth = 0;
       newYear++;
     }
+
     setCurrentMonth(newMonth);
     setCurrentYear(newYear);
   };
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) return;
@@ -100,6 +119,7 @@ export default function EventsPage() {
       .then((data) => setUserId(data.id))
       .catch(console.error);
   }, []);
+
   useEffect(() => {
     localStorage.setItem("events_currentMonth", currentMonth);
     localStorage.setItem("events_currentYear", currentYear);
@@ -149,9 +169,10 @@ export default function EventsPage() {
     const options = [];
     const startYear = today.getFullYear();
     const startMonth = today.getMonth();
-    for (let y = startYear; y <= startYear + 2; y++) {
+    for (let y = startYear; y <= maxYear; y++) {
       for (let m = 0; m < 12; m++) {
         if (y === startYear && m < startMonth) continue;
+        if (y === maxYear && m > maxMonth) continue;
         options.push(
           <option key={`${y}-${m}`} value={`${y}-${m}`}>
             {monthNames[m]} {y}
@@ -168,9 +189,32 @@ export default function EventsPage() {
         <button
           className="month-nav-left"
           onClick={() => handleMonthChange(-1)}
+          disabled={
+            currentYear === today.getFullYear() &&
+            currentMonth === today.getMonth()
+          }
+          style={{
+            opacity:
+              currentYear === today.getFullYear() &&
+              currentMonth === today.getMonth()
+                ? 0.4
+                : 1,
+            cursor:
+              currentYear === today.getFullYear() &&
+              currentMonth === today.getMonth()
+                ? "not-allowed"
+                : "pointer",
+          }}
+          title={
+            currentYear === today.getFullYear() &&
+            currentMonth === today.getMonth()
+              ? "You can't view past months"
+              : "Previous month"
+          }
         >
           <span className="arrow">&laquo;</span>
         </button>
+
         <select
           className="month-select"
           value={`${currentYear}-${currentMonth}`}
@@ -178,9 +222,24 @@ export default function EventsPage() {
         >
           {renderMonthOptions()}
         </select>
+
         <button
           className="month-nav-right"
           onClick={() => handleMonthChange(1)}
+          disabled={currentYear === maxYear && currentMonth === maxMonth}
+          style={{
+            opacity:
+              currentYear === maxYear && currentMonth === maxMonth ? 0.4 : 1,
+            cursor:
+              currentYear === maxYear && currentMonth === maxMonth
+                ? "not-allowed"
+                : "pointer",
+          }}
+          title={
+            currentYear === maxYear && currentMonth === maxMonth
+              ? "You can't view more than 2 years ahead"
+              : "Next month"
+          }
         >
           <span className="arrow">&raquo;</span>
         </button>

@@ -15,7 +15,6 @@ export default function AttendingPage() {
     (currentPage - 1) * eventsPerPage,
     currentPage * eventsPerPage
   );
-
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) return;
@@ -28,13 +27,14 @@ export default function AttendingPage() {
         return res.json();
       })
       .then((data) => {
-        const sorted = data.sort(
-          (a, b) => new Date(a.startDate) - new Date(b.startDate)
-        );
-        setEvents(sorted);
+        const now = new Date();
+        const upcomingSorted = data
+          .filter((event) => new Date(event.startDate) >= now)
+          .sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
+        setEvents(upcomingSorted);
       })
       .catch(console.error)
-      .finally(() => setLoading(false)); // 👈 lägg till detta
+      .finally(() => setLoading(false));
   }, []);
 
   const handleUnattend = (eventId) => {

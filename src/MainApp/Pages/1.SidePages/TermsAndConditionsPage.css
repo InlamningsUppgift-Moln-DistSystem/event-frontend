@@ -62,3 +62,12 @@
 .back-button:hover {
   background-color: #2c2f5d;
 }
+.link-inline {
+  color: #37437d;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.link-inline:hover {
+  color: #2c2f5d;
+}

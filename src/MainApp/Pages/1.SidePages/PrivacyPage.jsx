@@ -1,5 +1,6 @@
 import "./PrivacyPage.css";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function PrivacyPage() {
   const navigate = useNavigate();
@@ -47,8 +48,13 @@ export default function PrivacyPage() {
         <h2>Contact</h2>
         <p>
           For any questions regarding this policy, feel free to contact us via
-          our contact page.
+          our{" "}
+          <Link to="/contact" className="link-inline">
+            contact page
+          </Link>
+          .
         </p>
+
         <div className="back-button-container">
           <button className="back-button" onClick={() => navigate(-1)}>
             Back
